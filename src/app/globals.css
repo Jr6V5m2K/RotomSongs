@@ -19,7 +19,7 @@
 /* コンポーネント用カスタムスタイル */
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    @apply bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
   }
   
   .btn-secondary {
@@ -48,12 +48,12 @@
   
   /* 検索ボックス */
   .search-input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200;
   }
   
   /* タグスタイル */
   .tag {
-    @apply inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full;
+    @apply inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full;
   }
   
   /* モバイル対応のコンテナ */

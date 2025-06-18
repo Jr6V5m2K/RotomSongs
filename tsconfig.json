@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "target": "es2017",
+    "target": "es2018",
     "downlevelIteration": true,
     "plugins": [
       {

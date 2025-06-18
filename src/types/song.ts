@@ -33,6 +33,7 @@ export interface SongListItem {
   lyricsPreview: string;         // 歌詞のプレビュー（最初の2行程度）
   tags: string[];
   slug: string;
+  sourceUrl?: string;            // X投稿URL
 }
 
 export interface SearchFilters {

@@ -1,111 +1,69 @@
-// 暫定的なモックデータ（テスト用）
-import { Song, SongListItem, SearchIndex } from '@/types/song';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { Song, SongListItem, OriginalSong, RawMarkdownData, SearchIndex } from '@/types/song';
 
-const mockSongs: Song[] = [
-  {
-    id: '20230209_1519',
-    frontmatter: {
-      title: '20230209_1519',
-      id: '202302091519',
-      created: '2023-02-09',
-      updated: '2025-06-17',
-      tags: ['RotomSongs']
-    },
-    lyrics: `オーバタ オバタ オーバタ 球人♪
-オーバタ ナカノ 好守二遊♪
-
-オーバタ オバタ オーバタ 遊撃♪
-オーバタ オバタで アスパラガス♪`,
-    original: {
-      artist: '株式会社ミライト',
-      title: 'バニラ（求人サイト）の歌',
-      lyrics: `バーニラ バニラ バーニラ 求人
-バーニラ バニラ 高収入
-
-バーニラ バニラ バーニラ 求人
-バーニラ バニラで アルバイト`
-    },
-    sourceUrl: 'https://x.com/Starlystrongest/status/1623567298064678912',
-    slug: '20230209_1519',
-    fileName: '20230209_1519.md'
-  },
-  {
-    id: '20230523_2125',
-    frontmatter: {
-      title: '20230523_2125',
-      id: '202305232125',
-      created: '2023-05-23',
-      updated: '2025-06-17',
-      tags: ['RotomSongs']
-    },
-    lyrics: `オーバ オーバ オバ おばたの子♪
-鳴尾浜から やってきた
-
-オーバ オーバ オバ ほそながい♪
-ドヤ顔ピースの 勝男の子`,
-    original: {
-      artist: '藤岡藤巻と大橋のぞみ',
-      title: '崖の上のポニョ',
-      lyrics: `ポーニョ　ポーニョ　ポニョ　さかなの子
-青い海からやってきた
-ポーニョ　ポーニョ　ポニョ　ふくらんだ
-まんまるおなかの女の子`
-    },
-    sourceUrl: 'https://x.com/Starlystrongest/status/1660985387379204098',
-    slug: '20230523_2125',
-    fileName: '20230523_2125.md'
-  },
-  {
-    id: '20250617_1532',
-    frontmatter: {
-      title: '20250617_1532',
-      id: '202506171532',
-      created: '2025-06-17',
-      updated: '2025-06-17',
-      tags: ['RotomSongs']
-    },
-    lyrics: `カフェテリア流れる music
-ぼんやり聴いていたら
-知らぬ間にリズムに合わせ
-つま先から動き出す
-
-止められない今の尿意
-カモン カモン カモン カモン ベイビー
-ウンコもだよ`,
-    original: {
-      artist: 'AKB48',
-      title: '恋するフォーチュンクッキー',
-      lyrics: `カフェテリア流れるMusic
-ぼんやり聴いていたら
-知らぬ間にリズムに合わせ
-つま先から動き出す
-止められない今の気持ち
-カモン　カモン　カモン　カモン　ベイビー
-占ってよ`
-    },
-    sourceUrl: 'https://x.com/Starlystrongest/status/1934861742003376472',
-    slug: '20250617_1532',
-    fileName: '20250617_1532.md'
-  }
-];
+const songsDirectory = path.join(process.cwd(), 'Songs');
 
 /**
- * 全ての楽曲を取得（モックデータ）
+ * 全ての楽曲ファイルを読み込んでパースする
  */
 export async function getAllSongs(): Promise<Song[]> {
-  // 実際の実装では Songsディレクトリからファイルを読み込み
-  // 現在はモックデータを返す
-  return mockSongs.sort((a, b) => 
-    new Date(b.frontmatter.created).getTime() - new Date(a.frontmatter.created).getTime()
-  );
+  try {
+    const filenames = fs.readdirSync(songsDirectory);
+    const markdownFiles = filenames.filter(name => name.endsWith('.md'));
+
+    const songs = await Promise.all(
+      markdownFiles.map(async (filename) => {
+        const filePath = path.join(songsDirectory, filename);
+        const fileContents = fs.readFileSync(filePath, 'utf8');
+        
+        const { data, content } = matter(fileContents);
+        
+        return parseSongContent({
+          frontmatter: data as any,
+          content,
+          fileName: filename
+        });
+      })
+    );
+
+    // ファイル名のIDで降順ソート（新しい順）
+    return songs.sort((a, b) => {
+      // IDを数値として比較（YYYYMMDDHHMM形式）
+      const aTime = parseInt(a.id.replace('_', ''));
+      const bTime = parseInt(b.id.replace('_', ''));
+      return bTime - aTime;
+    });
+  } catch (error) {
+    console.error('Error reading songs directory:', error);
+    return [];
+  }
 }
 
 /**
  * IDによる単一楽曲の取得
  */
 export async function getSongById(id: string): Promise<Song | null> {
-  const song = mockSongs.find(song => song.id === id);
-  return song || null;
+  try {
+    const filePath = path.join(songsDirectory, `${id}.md`);
+    
+    if (!fs.existsSync(filePath)) {
+      return null;
+    }
+
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data, content } = matter(fileContents);
+    
+    return parseSongContent({
+      frontmatter: data as any,
+      content,
+      fileName: `${id}.md`
+    });
+  } catch (error) {
+    console.error(`Error reading song ${id}:`, error);
+    return null;
+  }
 }
 
 /**
@@ -123,7 +81,8 @@ export async function getSongList(): Promise<SongListItem[]> {
     originalTitle: song.original.title,
     lyricsPreview: generateLyricsPreview(song.lyrics),
     tags: song.frontmatter.tags,
-    slug: song.slug
+    slug: song.slug,
+    sourceUrl: song.sourceUrl
   }));
 }
 
@@ -160,6 +119,94 @@ export async function generateSearchIndex(): Promise<SearchIndex> {
 }
 
 /**
+ * 静的パラメータの生成（全楽曲のIDを取得）
+ */
+export async function generateStaticParams(): Promise<{ id: string }[]> {
+  try {
+    const filenames = fs.readdirSync(songsDirectory);
+    const markdownFiles = filenames.filter(name => name.endsWith('.md'));
+    
+    return markdownFiles.map(filename => ({
+      id: filename.replace(/\.md$/, '')
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+
+/**
+ * Markdownコンテンツから楽曲データをパース
+ */
+function parseSongContent(rawData: RawMarkdownData): Song {
+  const { frontmatter, content, fileName } = rawData;
+  
+  // コンテンツを各セクションに分割
+  const sections = parseMarkdownSections(content);
+  
+  const id = fileName.replace(/\.md$/, '');
+  
+  return {
+    id,
+    frontmatter,
+    lyrics: sections.lyrics || '',
+    original: {
+      artist: sections.originalArtist || '',
+      title: sections.originalTitle || '',
+      lyrics: sections.originalLyrics || ''
+    },
+    sourceUrl: extractSourceUrl(sections.source || ''),
+    slug: generateSlug(id),
+    fileName
+  };
+}
+
+/**
+ * Markdownのセクションをパース
+ */
+function parseMarkdownSections(content: string) {
+  const sections: { [key: string]: string } = {};
+  
+  // ### で始まるセクションを分割
+  const sectionMatches = content.split(/(?=^###\s)/m);
+  
+  sectionMatches.forEach(section => {
+    const lines = section.trim().split('\n');
+    if (lines.length === 0) return;
+    
+    const headerLine = lines[0];
+    const bodyLines = lines.slice(1);
+    
+    if (headerLine.startsWith('### Source')) {
+      sections.source = bodyLines.join('\n').trim();
+    } else if (headerLine.startsWith('### Lyrics')) {
+      sections.lyrics = bodyLines.join('\n').trim();
+    } else if (headerLine.startsWith('### Original')) {
+      // Original セクション内の #### Artist, #### Title, #### Lyrics を処理
+      const originalContent = bodyLines.join('\n');
+      const artistMatch = originalContent.match(/#### Artist\s*\n(.*?)(?=\n####|\n\n|$)/s);
+      const titleMatch = originalContent.match(/#### Title\s*\n(.*?)(?=\n####|\n\n|$)/s);
+      const lyricsMatch = originalContent.match(/#### Lyrics\s*\n(.*?)(?=\n####|$)/s);
+      
+      sections.originalArtist = artistMatch ? artistMatch[1].trim() : '';
+      sections.originalTitle = titleMatch ? titleMatch[1].trim() : '';
+      sections.originalLyrics = lyricsMatch ? lyricsMatch[1].trim() : '';
+    }
+  });
+  
+  return sections;
+}
+
+/**
+ * SourceセクションからX投稿URLを抽出
+ */
+function extractSourceUrl(sourceContent: string): string | undefined {
+  // ![](https://x.com/...) の形式からURLを抽出
+  const urlMatch = sourceContent.match(/!\[.*?\]\((https:\/\/x\.com\/[^)]+)\)/);
+  return urlMatch ? urlMatch[1] : undefined;
+}
+
+/**
  * 歌詞のプレビューテキストを生成（最初の2行程度）
  */
 function generateLyricsPreview(lyrics: string): string {
@@ -167,6 +214,13 @@ function generateLyricsPreview(lyrics: string): string {
   const previewLines = lines.slice(0, 2);
   const preview = previewLines.join(' ').substring(0, 100);
   return preview.length < lyrics.length ? `${preview}...` : preview;
+}
+
+/**
+ * URL用スラッグを生成
+ */
+function generateSlug(id: string): string {
+  return id; // 現在はIDをそのまま使用（20230209_1519）
 }
 
 /**

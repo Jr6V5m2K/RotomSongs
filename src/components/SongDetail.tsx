@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Song, SongListItem } from '@/types/song';
+import { formatDateFromId } from '@/lib/dateUtils';
 
 interface SongDetailProps {
   song: Song;
@@ -12,8 +13,10 @@ interface SongDetailProps {
 }
 
 export default function SongDetail({ song, navigation }: SongDetailProps) {
-  const createdDate = new Date(song.frontmatter.created);
-  const updatedDate = new Date(song.frontmatter.updated);
+  const createdDateTime = formatDateFromId(song.id);
+  const updatedDateTime = song.frontmatter.updated !== song.frontmatter.created 
+    ? formatDateFromId(song.frontmatter.title) // titleはIDと同じ形式
+    : null;
 
   const handleShare = () => {
     if (typeof window !== 'undefined') {
@@ -44,7 +47,7 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
       {/* メインコンテンツ */}
       <article className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         {/* ヘッダー */}
-        <header className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-8 border-b border-gray-200">
+        <header className="bg-gradient-to-r from-orange-50 to-red-50 px-6 py-8 border-b border-gray-200">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="flex-1">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
@@ -56,15 +59,15 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span>投稿: {createdDate.toLocaleDateString('ja-JP')}</span>
+                  <span>投稿: {createdDateTime}</span>
                 </div>
                 
-                {song.frontmatter.updated !== song.frontmatter.created && (
+                {updatedDateTime && (
                   <div className="flex items-center space-x-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
-                    <span>更新: {updatedDate.toLocaleDateString('ja-JP')}</span>
+                    <span>更新: {updatedDateTime}</span>
                   </div>
                 )}
               </div>
@@ -116,12 +119,12 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
             {/* 替え歌歌詞 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                 </svg>
                 替え歌歌詞
               </h2>
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                 <pre className="lyrics text-gray-800 whitespace-pre-wrap">
                   {song.lyrics}
                 </pre>
@@ -174,7 +177,7 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
           {navigation.prev && (
             <Link
               href={`/songs/${navigation.prev.slug}`}
-              className="group flex items-center text-gray-600 hover:text-blue-600 transition-colors duration-200"
+              className="group flex items-center text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               <svg className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -198,7 +201,7 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
           {navigation.next && (
             <Link
               href={`/songs/${navigation.next.slug}`}
-              className="group flex items-center justify-end text-gray-600 hover:text-blue-600 transition-colors duration-200"
+              className="group flex items-center justify-end text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               <div className="text-right">
                 <div className="text-sm">次の楽曲</div>

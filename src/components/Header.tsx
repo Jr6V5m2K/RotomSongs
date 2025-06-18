@@ -11,7 +11,6 @@ export default function Header() {
   const navigation = [
     { name: 'ホーム', href: '/', current: pathname === '/' },
     { name: '楽曲一覧', href: '/#songs', current: false },
-    { name: 'について', href: '/#about', current: false },
   ];
 
   return (
@@ -22,9 +21,9 @@ export default function Header() {
           <div className="flex-shrink-0">
             <Link 
               href="/" 
-              className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200"
+              className="text-xl font-bold text-gray-900 hover:text-orange-600 transition-colors duration-200"
             >
-              <span className="text-blue-600">Rotom</span>Songs
+              <span className="text-orange-600">Rotom</span>Songs
               <span className="ml-2 text-sm font-normal text-gray-500 hidden sm:inline">
                 家電和歌集
               </span>
@@ -39,8 +38,8 @@ export default function Header() {
                 href={item.href}
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors duration-200 ${
                   item.current
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-orange-600 bg-orange-50'
+                    : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
                 }`}
               >
                 {item.name}
@@ -68,7 +67,7 @@ export default function Header() {
           <div className="md:hidden">
             <button
               type="button"
-              className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors duration-200"
+              className="p-2 rounded-md text-gray-700 hover:text-orange-600 hover:bg-gray-100 transition-colors duration-200"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-expanded="false"
             >
@@ -100,8 +99,8 @@ export default function Header() {
                 href={item.href}
                 className={`block px-3 py-2 text-base font-medium rounded-md transition-colors duration-200 ${
                   item.current
-                    ? 'text-blue-600 bg-blue-50'
-                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                    ? 'text-orange-600 bg-orange-50'
+                    : 'text-gray-700 hover:text-orange-600 hover:bg-gray-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >

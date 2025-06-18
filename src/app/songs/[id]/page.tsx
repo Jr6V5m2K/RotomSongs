@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getSongById, getSongNavigation } from '@/lib/songs';
+import { getSongById, getSongNavigation, generateStaticParams as getStaticParams } from '@/lib/songs';
 import { generateSongMetadata } from '@/lib/metadata';
 import SongDetail from '@/components/SongDetail';
 
@@ -29,12 +29,8 @@ export async function generateMetadata({ params }: SongPageProps) {
 }
 
 export async function generateStaticParams() {
-  // 現在はモックデータなので、手動でパラメータを指定
-  return [
-    { id: '20230209_1519' },
-    { id: '20230523_2125' },
-    { id: '20250617_1532' }
-  ];
+  // 全83曲の静的パラメータを生成
+  return await getStaticParams();
 }
 
 export default async function SongPage({ params }: SongPageProps) {
