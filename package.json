@@ -11,7 +11,8 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "deploy": "node scripts/auto-deploy.js",
-    "rotomdeploy": "node scripts/auto-deploy.js"
+    "rotomdeploy": "node scripts/auto-deploy.js",
+    "enhanced-deploy": "node scripts/enhanced-deploy.js"
   },
   "dependencies": {
     "next": "^14.2.4",
