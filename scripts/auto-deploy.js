@@ -95,7 +95,17 @@ Co-Authored-By: Claude <noreply@anthropic.com>`;
 
   console.log('📤 Committing and pushing changes...');
   
+  // ワークフローファイルを除外してadd
   execSync('git add .', { stdio: 'inherit' });
+  
+  // ワークフローファイルがある場合は除外
+  try {
+    execSync('git reset .github/workflows/deploy.yml', { stdio: 'pipe' });
+    console.log('⚠️  Excluded workflow file due to permissions');
+  } catch (e) {
+    // ワークフローファイルがない場合はエラーを無視
+  }
+  
   execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
   execSync('git push origin main', { stdio: 'inherit' });
   
