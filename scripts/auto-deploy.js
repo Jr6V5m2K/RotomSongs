@@ -75,16 +75,32 @@ try {
   fs.writeFileSync(headerPath, header);
   console.log(`📝 Updated header with ${totalSongs} songs`);
   
-  // 7. Next.jsビルドテスト
+  // 7. フッターの楽曲数を更新
+  const footerPath = path.join(__dirname, '../src/components/Footer.tsx');
+  let footer = fs.readFileSync(footerPath, 'utf8');
+  
+  footer = footer.replace(
+    /\d+曲の替え歌を収録しています。/g,
+    `${totalSongs}曲の替え歌を収録しています。`
+  );
+  footer = footer.replace(
+    /<span className="font-medium">\d+曲<\/span>/g,
+    `<span className="font-medium">${totalSongs}曲</span>`
+  );
+  
+  fs.writeFileSync(footerPath, footer);
+  console.log(`📝 Updated footer with ${totalSongs} songs`);
+  
+  // 8. Next.jsビルドテスト
   console.log('🔨 Testing build...');
   execSync('npm run build', { stdio: 'inherit' });
   console.log('✅ Build successful!');
   
-  // 8. Gitコミット・プッシュ
+  // 9. Gitコミット・プッシュ
   const commitMessage = `feat: Update song collection to ${totalSongs} songs
 
 - Add/update songs in collection
-- Auto-update song count in metadata and components
+- Auto-update song count in metadata, header, and footer components
 - Latest song: ${latestSong}
 
 ${DEPLOY_TAG}
