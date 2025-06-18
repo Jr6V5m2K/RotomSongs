@@ -8,7 +8,7 @@ export const siteConfig = {
   name: 'RotomSongs - 家電和歌集',
   description: '替え歌コレクション「家電和歌集」- X（旧Twitter）で投稿された83曲の替え歌を体系的にまとめたコレクションサイトです。',
   url: baseUrl,
-  ogImage: `${baseUrl}/og-image.png`,
+  ogImage: `${baseUrl}/images/social/twitter.png`,
   creator: 'Jr6V5m2K',
   keywords: [
     '替え歌',
@@ -67,8 +67,8 @@ export const defaultMetadata: Metadata = {
   manifest: `${baseUrl}/manifest.json`,
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png'
+    shortcut: '/images/social/favicon-16x16.png',
+    apple: '/images/social/apple-touch-icon.png'
   }
 };
 
