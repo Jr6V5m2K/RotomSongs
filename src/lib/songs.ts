@@ -203,8 +203,8 @@ function parseMarkdownSections(content: string) {
  * SourceセクションからX投稿URLを抽出
  */
 function extractSourceUrl(sourceContent: string): string | undefined {
-  // ![](https://x.com/...) の形式からURLを抽出
-  const urlMatch = sourceContent.match(/!\[.*?\]\((https:\/\/x\.com\/[^)]+)\)/);
+  // ![](https://x.com/...) または ![](http://x.com/...) の形式からURLを抽出
+  const urlMatch = sourceContent.match(/!\[.*?\]\((https?:\/\/x\.com\/[^)]+)\)/);
   return urlMatch ? urlMatch[1] : undefined;
 }
 
