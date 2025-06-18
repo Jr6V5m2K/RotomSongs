@@ -9,7 +9,9 @@
     "start": "next start",
     "export": "next build",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "deploy": "node scripts/auto-deploy.js",
+    "rotomdeploy": "node scripts/auto-deploy.js"
   },
   "dependencies": {
     "next": "^14.2.4",
