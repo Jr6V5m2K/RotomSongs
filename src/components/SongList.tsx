@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { SongListItem } from '@/types/song';
 import { formatDateShort } from '@/lib/dateUtils';
 
@@ -95,12 +96,12 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
                     <span className="text-xs text-gray-400">ソースなし</span>
                   )}
                 </div>
-                <a
+                <Link
                   href={`/songs/${song.slug}`}
                   className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors duration-200"
                 >
                   詳細 →
-                </a>
+                </Link>
               </div>
             </div>
           </div>

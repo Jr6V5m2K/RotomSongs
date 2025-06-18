@@ -12,7 +12,9 @@ const nextConfig = {
   // GitHub Pages用の設定
   experimental: {
     esmExternals: false
-  }
+  },
+  // 静的パスの生成
+  generateBuildId: () => 'build'
 }
 
 module.exports = nextConfig
