@@ -31,6 +31,8 @@ export interface SongListItem {
   originalArtist: string;
   originalTitle: string;
   lyricsPreview: string;         // 歌詞のプレビュー（最初の2行程度）
+  lyrics: string;                // 完全な歌詞（検索用）
+  originalLyrics: string;        // 原曲歌詞（検索用）
   tags: string[];
   slug: string;
   sourceUrl?: string;            // X投稿URL

@@ -80,6 +80,8 @@ export async function getSongList(): Promise<SongListItem[]> {
     originalArtist: song.original.artist,
     originalTitle: song.original.title,
     lyricsPreview: generateLyricsPreview(song.lyrics),
+    lyrics: song.lyrics,
+    originalLyrics: song.original.lyrics,
     tags: song.frontmatter.tags,
     slug: song.slug,
     sourceUrl: song.sourceUrl

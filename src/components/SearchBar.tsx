@@ -30,7 +30,8 @@ export default function SearchBar({ songs, onSearch }: SearchBarProps) {
           song.title,
           song.originalArtist,
           song.originalTitle,
-          song.lyricsPreview,
+          song.lyrics,
+          song.originalLyrics,
           song.tags.join(' ')
         ].join(' ').toLowerCase();
         
