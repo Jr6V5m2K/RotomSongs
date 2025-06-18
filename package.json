@@ -1,7 +1,7 @@
 {
   "name": "rotom-songs",
   "version": "1.0.0",
-  "description": "家電和歌集 - A collection of parody songs",
+  "description": "RotomSongs - 家電和歌集: 85曲の替え歌コレクション",
   "private": true,
   "scripts": {
     "dev": "next dev",
