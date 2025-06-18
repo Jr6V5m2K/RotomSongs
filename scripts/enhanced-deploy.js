@@ -133,15 +133,25 @@ try {
 
   console.log(`✅ Fixed line breaks in ${fixedFiles} files`);
 
-  // 3. 楽曲数カウントと更新処理（既存のスクリプトと同じ）
+  // 3. 楽曲数カウントと更新処理（RotomSongsタグのみ）
   const songFiles = fs.readdirSync(SONGS_DIR)
     .filter(file => file.endsWith('.md'))
     .sort();
   
-  const totalSongs = songFiles.length;
-  console.log(`📊 Total songs found: ${totalSongs}`);
+  // RotomSongsタグを持つファイルのみカウント
+  const matter = require('gray-matter');
+  const rotomSongFiles = songFiles.filter(filename => {
+    const filePath = path.join(SONGS_DIR, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data } = matter(fileContents);
+    return data.tags && data.tags.includes('RotomSongs');
+  });
   
-  const latestSong = songFiles[songFiles.length - 1];
+  const totalSongs = rotomSongFiles.length;
+  console.log(`📊 Total RotomSongs found: ${totalSongs}`);
+  console.log(`📁 Total files: ${songFiles.length} (${songFiles.length - totalSongs} excluded)`);
+  
+  const latestSong = rotomSongFiles[rotomSongFiles.length - 1];
   const latestDate = latestSong ? latestSong.replace('.md', '').replace('_', ' ') : 'N/A';
   console.log(`🆕 Latest song: ${latestSong} (${latestDate})`);
   

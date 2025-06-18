@@ -28,8 +28,14 @@ export async function getAllSongs(): Promise<Song[]> {
       })
     );
 
+    // RotomSongsタグを持つ楽曲のみフィルタリング
+    const filteredSongs = songs.filter(song => 
+      song.frontmatter.tags && 
+      song.frontmatter.tags.includes('RotomSongs')
+    );
+
     // ファイル名のIDで降順ソート（新しい順）
-    return songs.sort((a, b) => {
+    return filteredSongs.sort((a, b) => {
       // IDを数値として比較（YYYYMMDDHHMM形式）
       const aTime = parseInt(a.id.replace('_', ''));
       const bTime = parseInt(b.id.replace('_', ''));
@@ -54,6 +60,11 @@ export async function getSongById(id: string): Promise<Song | null> {
 
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContents);
+    
+    // RotomSongsタグがない場合はnullを返す
+    if (!data.tags || !data.tags.includes('RotomSongs')) {
+      return null;
+    }
     
     return parseSongContent({
       frontmatter: data as any,
@@ -128,7 +139,15 @@ export async function generateStaticParams(): Promise<{ id: string }[]> {
     const filenames = fs.readdirSync(songsDirectory);
     const markdownFiles = filenames.filter(name => name.endsWith('.md'));
     
-    return markdownFiles.map(filename => ({
+    // RotomSongsタグを持つファイルのみ静的生成対象とする
+    const rotomSongFiles = markdownFiles.filter(filename => {
+      const filePath = path.join(songsDirectory, filename);
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents);
+      return data.tags && data.tags.includes('RotomSongs');
+    });
+    
+    return rotomSongFiles.map(filename => ({
       id: filename.replace(/\.md$/, '')
     }));
   } catch (error) {
