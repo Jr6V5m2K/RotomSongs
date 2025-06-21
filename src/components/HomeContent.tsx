@@ -148,7 +148,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
           <p className="text-lg text-gray-700 leading-relaxed mb-12 max-w-2xl mx-auto japanese-text">
             X（旧Twitter）で投稿された替え歌をまとめたコレクションサイトです。
             <br />
-            2023年から現在まで、<span className="font-semibold text-orange-600">{songs.length}曲</span>の替え歌を収録しています。
+            現在、<span className="font-semibold text-orange-600">{songs.length}曲</span>の替え歌を収録しています。
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4">

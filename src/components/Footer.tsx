@@ -11,8 +11,8 @@ export default function Footer() {
               <span className="text-orange-600">Rotom</span>Songs
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
-              家電和歌集は、X（旧Twitter）で投稿された替え歌を体系的にまとめたコレクションサイトです。
-              2023年から現在まで、99曲の替え歌を収録しています。
+              家電和歌集は、X（旧Twitter）で投稿された替え歌をまとめたコレクションサイトです。
+              現在、99曲の替え歌を収録しています。
             </p>
           </div>
 
