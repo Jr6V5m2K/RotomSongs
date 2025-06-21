@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Song, SongListItem } from '@/types/song';
-import { formatDateFromId, formatDateForDisplay } from '@/lib/dateUtils';
+import { formatDateFromId, formatDateShort } from '@/lib/dateUtils';
 
 interface SongDetailProps {
   song: Song;
@@ -18,6 +18,13 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
   const updatedDateTime = song.frontmatter.updated !== song.frontmatter.created 
     ? formatDateFromId(song.frontmatter.title) // titleはIDと同じ形式
     : null;
+
+  // 関連楽曲を日付降順でソート
+  const sortedRelatedSongs = relatedSongs.sort((a, b) => {
+    const aTime = parseInt(String(a.id).replace('_', ''));
+    const bTime = parseInt(String(b.id).replace('_', ''));
+    return bTime - aTime;
+  });
 
   const handleShare = () => {
     if (typeof window !== 'undefined') {
@@ -187,23 +194,27 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {relatedSongs.map(relatedSong => (
+              {sortedRelatedSongs.map(relatedSong => (
                 <Link
                   key={relatedSong.id}
                   href={`/songs/${relatedSong.slug}`}
                   className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
                 >
-                  <div className="mb-2">
-                    <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
-                      {relatedSong.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">
-                      {relatedSong.lyricsPreview}
-                    </p>
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
+                        {relatedSong.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 line-clamp-2">
+                        {relatedSong.lyricsPreview}
+                      </p>
+                    </div>
+                    <div className="ml-3 flex-shrink-0">
+                      <span className="text-xs text-gray-500">
+                        {formatDateShort(relatedSong.id)}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    {formatDateForDisplay(relatedSong.created)}
-                  </p>
                 </Link>
               ))}
             </div>

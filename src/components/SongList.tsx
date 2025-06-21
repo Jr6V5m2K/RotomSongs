@@ -13,7 +13,7 @@ interface SongListProps {
 
 export default function SongList({ initialSongs, filteredSongs, isSearching }: SongListProps) {
   const [displayedSongs, setDisplayedSongs] = useState<SongListItem[]>([]);
-  const [displayCount, setDisplayCount] = useState(12);
+  const [displayCount, setDisplayCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
 
   // 検索結果が変わったときの処理
@@ -22,7 +22,7 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
       // 検索中は全て表示
       setDisplayedSongs(filteredSongs);
     } else {
-      // 通常表示は12曲からスタート
+      // 通常表示は6曲からスタート
       setDisplayedSongs(filteredSongs.slice(0, displayCount));
     }
   }, [filteredSongs, isSearching, displayCount]);
@@ -31,7 +31,7 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
     setIsLoading(true);
     
     setTimeout(() => {
-      const nextCount = Math.min(displayCount + 12, initialSongs.length);
+      const nextCount = Math.min(displayCount + 6, initialSongs.length);
       setDisplayedSongs(initialSongs.slice(0, nextCount));
       setDisplayCount(nextCount);
       setIsLoading(false);
@@ -39,7 +39,7 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
   };
 
   const hasMoreSongs = !isSearching && displayCount < initialSongs.length;
-  const showAllDisplayed = !isSearching && !hasMoreSongs && initialSongs.length > 12;
+  const showAllDisplayed = !isSearching && !hasMoreSongs && initialSongs.length > 6;
 
   return (
     <div>
