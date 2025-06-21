@@ -84,17 +84,17 @@ export async function getSongList(): Promise<SongListItem[]> {
   const songs = await getAllSongs();
   
   return songs.map(song => ({
-    id: song.id,
-    title: song.frontmatter.title,
-    created: String(song.frontmatter.created),
-    updated: String(song.frontmatter.updated),
-    originalArtist: song.original.artist,
-    originalTitle: song.original.title,
-    lyricsPreview: generateLyricsPreview(song.lyrics),
-    lyrics: song.lyrics,
-    originalLyrics: song.original.lyrics,
-    tags: song.frontmatter.tags,
-    slug: song.slug,
+    id: song.id || '',
+    title: song.frontmatter?.title || '',
+    created: String(song.frontmatter?.created || ''),
+    updated: String(song.frontmatter?.updated || ''),
+    originalArtist: song.original?.artist || '',
+    originalTitle: song.original?.title || '',
+    lyricsPreview: generateLyricsPreview(song.lyrics || ''),
+    lyrics: song.lyrics || '',
+    originalLyrics: song.original?.lyrics || '',
+    tags: song.frontmatter?.tags || [],
+    slug: song.slug || '',
     sourceUrl: song.sourceUrl
   }));
 }

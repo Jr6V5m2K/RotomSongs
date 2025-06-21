@@ -14,16 +14,32 @@ interface SongDetailProps {
 }
 
 export default function SongDetail({ song, navigation, relatedSongs }: SongDetailProps) {
+  // データ検証
+  if (!song || !song.id) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center py-12">
+          <p className="text-gray-600">楽曲データを読み込んでいます...</p>
+        </div>
+      </div>
+    );
+  }
+
   const createdDateTime = formatDateFromId(song.id);
-  const updatedDateTime = song.frontmatter.updated !== song.frontmatter.created 
-    ? formatDateFromId(song.frontmatter.title) // titleはIDと同じ形式
+  const updatedDateTime = song.frontmatter?.updated !== song.frontmatter?.created 
+    ? formatDateFromId(song.frontmatter?.title || song.id) // titleはIDと同じ形式
     : null;
 
-  // 関連楽曲を日付降順でソート
-  const sortedRelatedSongs = relatedSongs.sort((a, b) => {
-    const aTime = parseInt(String(a.id).replace('_', ''));
-    const bTime = parseInt(String(b.id).replace('_', ''));
-    return bTime - aTime;
+  // 関連楽曲を日付降順でソート（安全な処理）
+  const sortedRelatedSongs = (relatedSongs || []).sort((a, b) => {
+    try {
+      const aTime = parseInt(String(a.id || '').replace('_', ''));
+      const bTime = parseInt(String(b.id || '').replace('_', ''));
+      return bTime - aTime;
+    } catch (error) {
+      console.error('Error sorting related songs:', error);
+      return 0;
+    }
   });
 
   const handleShare = () => {

@@ -16,49 +16,75 @@ export default function HomeContent({ songs }: HomeContentProps) {
   const [filteredSongs, setFilteredSongs] = useState<SongListItem[]>(songs);
   const [isSearching, setIsSearching] = useState(false);
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+  const [isClient, setIsClient] = useState(false);
+
+  // クライアントサイドでのみ実行（Hydration Mismatch回避）
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // 年度別楽曲を分類する関数
   const groupSongsByYear = useCallback((songs: SongListItem[]) => {
-    const yearGroups: { [year: string]: SongListItem[] } = {};
-    
-    songs.forEach(song => {
-      // ファイル名のIDから年度を確実に取得
-      let year: string;
+    try {
+      const yearGroups: { [year: string]: SongListItem[] } = {};
       
-      // まずIDから年度を取得（20230209_1519 → 2023）
-      const idMatch = song.id.match(/^(\d{4})/);
-      if (idMatch) {
-        year = idMatch[1];
-      } else {
-        // フォールバック: createdフィールドから取得
-        const createdStr = String(song.created);
-        if (createdStr.includes('-')) {
-          // YYYY-MM-DD 形式
-          year = createdStr.substring(0, 4);
-        } else {
-          // YYYYMMDD_HHMM 形式
-          year = createdStr.substring(0, 4);
+      songs.forEach(song => {
+        try {
+          // ファイル名のIDから年度を確実に取得
+          let year: string;
+          
+          // まずIDから年度を取得（20230209_1519 → 2023）
+          const idMatch = song.id?.match(/^(\d{4})/);
+          if (idMatch) {
+            year = idMatch[1];
+          } else {
+            // フォールバック: createdフィールドから取得
+            const createdStr = String(song.created || '');
+            if (createdStr.includes('-')) {
+              // YYYY-MM-DD 形式
+              year = createdStr.substring(0, 4);
+            } else {
+              // YYYYMMDD_HHMM 形式
+              year = createdStr.substring(0, 4);
+            }
+          }
+          
+          // 年度が有効でない場合はスキップ
+          if (!year || !/^\d{4}$/.test(year)) {
+            console.warn('Invalid year for song:', song);
+            return;
+          }
+          
+          if (!yearGroups[year]) {
+            yearGroups[year] = [];
+          }
+          yearGroups[year].push(song);
+        } catch (error) {
+          console.error('Error processing song:', song, error);
         }
-      }
-      
-      if (!yearGroups[year]) {
-        yearGroups[year] = [];
-      }
-      yearGroups[year].push(song);
-    });
+      });
 
-    // 年度を降順でソート
-    const sortedYears = Object.keys(yearGroups).sort((a, b) => b.localeCompare(a));
-    return sortedYears.map(year => ({
-      year,
-      songs: yearGroups[year].sort((a, b) => {
-        // IDベースで降順ソート（新しい順）
-        const aTime = parseInt(String(a.id).replace('_', ''));
-        const bTime = parseInt(String(b.id).replace('_', ''));
-        return bTime - aTime;
-      }),
-      count: yearGroups[year].length
-    }));
+      // 年度を降順でソート
+      const sortedYears = Object.keys(yearGroups).sort((a, b) => b.localeCompare(a));
+      return sortedYears.map(year => ({
+        year,
+        songs: yearGroups[year].sort((a, b) => {
+          try {
+            // IDベースで降順ソート（新しい順）
+            const aTime = parseInt(String(a.id || '').replace('_', ''));
+            const bTime = parseInt(String(b.id || '').replace('_', ''));
+            return bTime - aTime;
+          } catch (error) {
+            console.error('Error sorting songs:', error);
+            return 0;
+          }
+        }),
+        count: yearGroups[year].length
+      }));
+    } catch (error) {
+      console.error('Error grouping songs by year:', error);
+      return [];
+    }
   }, []);
 
   const yearlyGroups = groupSongsByYear(songs);
@@ -87,6 +113,31 @@ export default function HomeContent({ songs }: HomeContentProps) {
     setFilteredSongs(newFilteredSongs);
     setIsSearching(newFilteredSongs.length !== songs.length);
   }, [songs.length]);
+
+  // データ検証
+  if (!songs || !Array.isArray(songs)) {
+    return (
+      <div className="container-responsive py-8">
+        <div className="text-center py-12">
+          <p className="text-gray-600">楽曲データを読み込んでいます...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // クライアントサイドでのみレンダリング（重い処理）
+  if (!isClient) {
+    return (
+      <div className="container-responsive py-8">
+        <div className="text-center py-12">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-responsive py-8">
