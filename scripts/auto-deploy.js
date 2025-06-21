@@ -16,16 +16,26 @@ console.log('🎵 RotomSongs Auto Deploy Script');
 console.log('=====================================');
 
 try {
-  // 1. Songsディレクトリの楽曲数をカウント
+  // 1. Songsディレクトリの楽曲数をカウント（RotomSongsタグのみ）
   const songFiles = fs.readdirSync(SONGS_DIR)
     .filter(file => file.endsWith('.md'))
     .sort();
   
-  const totalSongs = songFiles.length;
-  console.log(`📊 Total songs found: ${totalSongs}`);
+  // RotomSongsタグを持つファイルのみカウント
+  const matter = require('gray-matter');
+  const rotomSongFiles = songFiles.filter(filename => {
+    const filePath = path.join(SONGS_DIR, filename);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const { data } = matter(fileContents);
+    return data.tags && data.tags.includes('RotomSongs');
+  });
   
-  // 2. 最新の楽曲情報を取得
-  const latestSong = songFiles[songFiles.length - 1];
+  const totalSongs = rotomSongFiles.length;
+  console.log(`📊 Total RotomSongs found: ${totalSongs}`);
+  console.log(`📁 Total files: ${songFiles.length} (${songFiles.length - totalSongs} excluded)`);
+  
+  // 2. 最新の楽曲情報を取得（RotomSongsタグのファイルから）
+  const latestSong = rotomSongFiles[rotomSongFiles.length - 1];
   const latestDate = latestSong ? latestSong.replace('.md', '').replace('_', ' ') : 'N/A';
   console.log(`🆕 Latest song: ${latestSong} (${latestDate})`);
   
