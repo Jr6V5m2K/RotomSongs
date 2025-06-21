@@ -18,7 +18,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
   const [isClient, setIsClient] = useState(false);
 
-  // クライアントサイドでのみ実行（Hydration Mismatch回避）
+  // 年度別セクション用のクライアントサイド実行（Hydration Mismatch回避）
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -125,19 +125,6 @@ export default function HomeContent({ songs }: HomeContentProps) {
     );
   }
 
-  // クライアントサイドでのみレンダリング（重い処理）
-  if (!isClient) {
-    return (
-      <div className="container-responsive py-8">
-        <div className="text-center py-12">
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container-responsive py-8">
@@ -213,8 +200,8 @@ export default function HomeContent({ songs }: HomeContentProps) {
         </div>
       </section>
 
-      {/* 年度別楽曲セクション（検索時は非表示） */}
-      {!isSearching && (
+      {/* 年度別楽曲セクション（検索時は非表示、クライアントサイドのみ） */}
+      {!isSearching && isClient && (
         <section className="py-16">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">年度別楽曲</h2>
