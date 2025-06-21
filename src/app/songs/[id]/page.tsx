@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getSongById, getSongNavigation, generateStaticParams as getStaticParams } from '@/lib/songs';
+import { getSongById, getSongNavigation, getRelatedSongs, generateStaticParams as getStaticParams } from '@/lib/songs';
 import { generateSongMetadata } from '@/lib/metadata';
 import SongDetail from '@/components/SongDetail';
 
@@ -41,10 +41,11 @@ export default async function SongPage({ params }: SongPageProps) {
   }
 
   const navigation = await getSongNavigation(params.id);
+  const relatedSongs = await getRelatedSongs(song.references || []);
 
   return (
     <div className="container-responsive py-8">
-      <SongDetail song={song} navigation={navigation} />
+      <SongDetail song={song} navigation={navigation} relatedSongs={relatedSongs} />
     </div>
   );
 }

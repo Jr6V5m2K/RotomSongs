@@ -4,6 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 import { SongListItem } from '@/types/song';
 import SongList from '@/components/SongList';
 import SearchBar from '@/components/SearchBar';
+import { ChevronRight, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { formatDateForDisplay } from '@/lib/dateUtils';
 
 interface HomeContentProps {
   songs: SongListItem[];
@@ -12,6 +15,61 @@ interface HomeContentProps {
 export default function HomeContent({ songs }: HomeContentProps) {
   const [filteredSongs, setFilteredSongs] = useState<SongListItem[]>(songs);
   const [isSearching, setIsSearching] = useState(false);
+  const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+
+  // 年度別楽曲を分類する関数
+  const groupSongsByYear = useCallback((songs: SongListItem[]) => {
+    const yearGroups: { [year: string]: SongListItem[] } = {};
+    
+    songs.forEach(song => {
+      // ファイル名のIDから年度を確実に取得
+      let year: string;
+      
+      // まずIDから年度を取得（20230209_1519 → 2023）
+      const idMatch = song.id.match(/^(\d{4})/);
+      if (idMatch) {
+        year = idMatch[1];
+      } else {
+        // フォールバック: createdフィールドから取得
+        const createdStr = String(song.created);
+        if (createdStr.includes('-')) {
+          // YYYY-MM-DD 形式
+          year = createdStr.substring(0, 4);
+        } else {
+          // YYYYMMDD_HHMM 形式
+          year = createdStr.substring(0, 4);
+        }
+      }
+      
+      if (!yearGroups[year]) {
+        yearGroups[year] = [];
+      }
+      yearGroups[year].push(song);
+    });
+
+    // 年度を降順でソート
+    const sortedYears = Object.keys(yearGroups).sort((a, b) => b.localeCompare(a));
+    return sortedYears.map(year => ({
+      year,
+      songs: yearGroups[year].sort((a, b) => String(b.created).localeCompare(String(a.created))), // 各年内でも新しい順
+      count: yearGroups[year].length
+    }));
+  }, []);
+
+  const yearlyGroups = groupSongsByYear(songs);
+
+  // 年度の展開/折りたたみ切り替え
+  const toggleYear = (year: string) => {
+    setExpandedYears(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(year)) {
+        newSet.delete(year);
+      } else {
+        newSet.add(year);
+      }
+      return newSet;
+    });
+  };
 
 
   // propsのsongsが変わった時にfilteredSongsを更新
@@ -30,6 +88,14 @@ export default function HomeContent({ songs }: HomeContentProps) {
       {/* ヒーローセクション */}
       <section className="text-center py-12 md:py-20">
         <div className="max-w-4xl mx-auto">
+          {/* ヒーロー画像 */}
+          <div className="mb-8">
+            <img 
+              src="/images/hero.png" 
+              alt="RotomSongs Hero" 
+              className="w-32 h-32 md:w-40 md:h-40 mx-auto"
+            />
+          </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             <span className="text-orange-600">Rotom</span>Songs
           </h1>
@@ -37,7 +103,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
             家電和歌集
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed mb-12 max-w-2xl mx-auto japanese-text">
-            X（旧Twitter）で投稿された替え歌を体系的にまとめたコレクションサイトです。
+            X（旧Twitter）で投稿された替え歌をまとめたコレクションサイトです。
             <br />
             2023年から現在まで、<span className="font-semibold text-orange-600">{songs.length}曲</span>の替え歌を収録しています。
           </p>
@@ -90,6 +156,63 @@ export default function HomeContent({ songs }: HomeContentProps) {
           />
         </div>
       </section>
+
+      {/* 年度別楽曲セクション（検索時は非表示） */}
+      {!isSearching && (
+        <section className="py-16">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">年度別楽曲</h2>
+            
+            <div className="space-y-4">
+              {yearlyGroups.map(({ year, songs: yearSongs, count }) => (
+                <div key={year} className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <button
+                    onClick={() => toggleYear(year)}
+                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors rounded-lg"
+                  >
+                    <div className="flex items-center space-x-3">
+                      {expandedYears.has(year) ? (
+                        <ChevronDown className="w-5 h-5 text-gray-500" />
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-gray-500" />
+                      )}
+                      <span className="text-lg font-semibold text-gray-900">
+                        {year}年 ({count}件)
+                      </span>
+                    </div>
+                  </button>
+                  
+                  {expandedYears.has(year) && (
+                    <div className="px-6 pb-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {yearSongs.map(song => (
+                          <Link
+                            key={song.id}
+                            href={`/songs/${song.slug}`}
+                            className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="mb-2">
+                              <h3 className="font-semibold text-gray-900 line-clamp-1">
+                                {song.title}
+                              </h3>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {song.originalArtist} - {song.originalTitle}
+                              </p>
+                            </div>
+                            <p className="text-xs text-gray-500">
+                              {formatDateForDisplay(song.created)}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* コレクションの特徴セクション（検索時は非表示） */}
       {!isSearching && (

@@ -75,3 +75,21 @@ export function getYearFromId(id: string): string {
   const match = id.match(/^(\d{4})/);
   return match ? match[1] : new Date().getFullYear().toString();
 }
+
+/**
+ * 複数の日付形式を統一フォーマットに変換する
+ * YYYY-MM-DD または YYYYMMDD_HHMM → YYYY/MM/DD
+ */
+export function formatDateForDisplay(dateStr: string | number): string {
+  const str = String(dateStr);
+  
+  if (str.includes('-')) {
+    // YYYY-MM-DD 形式
+    return str.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1/$2/$3');
+  } else if (str.includes('_')) {
+    // YYYYMMDD_HHMM 形式
+    return str.replace(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})/, '$1/$2/$3');
+  }
+  
+  return str;
+}

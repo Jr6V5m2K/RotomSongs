@@ -37,8 +37,8 @@ export async function getAllSongs(): Promise<Song[]> {
     // ファイル名のIDで降順ソート（新しい順）
     return filteredSongs.sort((a, b) => {
       // IDを数値として比較（YYYYMMDDHHMM形式）
-      const aTime = parseInt(a.id.replace('_', ''));
-      const bTime = parseInt(b.id.replace('_', ''));
+      const aTime = parseInt(String(a.id).replace('_', ''));
+      const bTime = parseInt(String(b.id).replace('_', ''));
       return bTime - aTime;
     });
   } catch (error) {
@@ -86,8 +86,8 @@ export async function getSongList(): Promise<SongListItem[]> {
   return songs.map(song => ({
     id: song.id,
     title: song.frontmatter.title,
-    created: song.frontmatter.created,
-    updated: song.frontmatter.updated,
+    created: String(song.frontmatter.created),
+    updated: String(song.frontmatter.updated),
     originalArtist: song.original.artist,
     originalTitle: song.original.title,
     lyricsPreview: generateLyricsPreview(song.lyrics),
@@ -178,7 +178,8 @@ function parseSongContent(rawData: RawMarkdownData): Song {
     },
     sourceUrl: extractSourceUrl(sections.source || ''),
     slug: generateSlug(id),
-    fileName
+    fileName,
+    references: parseReferences(sections.reference || '')
   };
 }
 
@@ -212,6 +213,10 @@ function parseMarkdownSections(content: string) {
       sections.originalArtist = artistMatch ? artistMatch[1].trim() : '';
       sections.originalTitle = titleMatch ? titleMatch[1].trim() : '';
       sections.originalLyrics = lyricsMatch ? lyricsMatch[1].trim() : '';
+    } else if (headerLine.startsWith('### Reference')) {
+      // Reference セクション内の [[楽曲ID]] 形式のリンクを抽出
+      const referenceContent = bodyLines.join('\n').trim();
+      sections.reference = referenceContent;
     }
   });
   
@@ -225,6 +230,28 @@ function extractSourceUrl(sourceContent: string): string | undefined {
   // ![](https://x.com/...) または ![](http://x.com/...) の形式からURLを抽出
   const urlMatch = sourceContent.match(/!\[.*?\]\((https?:\/\/x\.com\/[^)]+)\)/);
   return urlMatch ? urlMatch[1] : undefined;
+}
+
+/**
+ * Referenceセクションから楽曲IDのリストを抽出
+ */
+function parseReferences(referenceContent: string): string[] {
+  if (!referenceContent.trim()) {
+    return [];
+  }
+  
+  // [[楽曲ID]] 形式のリンクを抽出
+  const linkMatches = referenceContent.match(/\[\[([^\]]+)\]\]/g);
+  
+  if (!linkMatches) {
+    return [];
+  }
+  
+  return linkMatches.map(match => {
+    // [[楽曲ID]] から 楽曲ID を抽出
+    const idMatch = match.match(/\[\[([^\]]+)\]\]/);
+    return idMatch ? idMatch[1] : '';
+  }).filter(id => id.length > 0);
 }
 
 /**
@@ -242,6 +269,19 @@ function generateLyricsPreview(lyrics: string): string {
  */
 function generateSlug(id: string): string {
   return id; // 現在はIDをそのまま使用（20230209_1519）
+}
+
+/**
+ * 関連楽曲の情報を取得
+ */
+export async function getRelatedSongs(referenceIds: string[]): Promise<SongListItem[]> {
+  if (!referenceIds || referenceIds.length === 0) {
+    return [];
+  }
+  
+  const allSongs = await getSongList();
+  
+  return allSongs.filter(song => referenceIds.includes(song.id));
 }
 
 /**

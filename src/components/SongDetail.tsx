@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Song, SongListItem } from '@/types/song';
-import { formatDateFromId } from '@/lib/dateUtils';
+import { formatDateFromId, formatDateForDisplay } from '@/lib/dateUtils';
 
 interface SongDetailProps {
   song: Song;
@@ -10,9 +10,10 @@ interface SongDetailProps {
     prev: SongListItem | null;
     next: SongListItem | null;
   };
+  relatedSongs: SongListItem[];
 }
 
-export default function SongDetail({ song, navigation }: SongDetailProps) {
+export default function SongDetail({ song, navigation, relatedSongs }: SongDetailProps) {
   const createdDateTime = formatDateFromId(song.id);
   const updatedDateTime = song.frontmatter.updated !== song.frontmatter.created 
     ? formatDateFromId(song.frontmatter.title) // titleはIDと同じ形式
@@ -170,6 +171,45 @@ export default function SongDetail({ song, navigation }: SongDetailProps) {
           </div>
         </div>
       </article>
+
+      {/* 同じ原曲の替え歌セクション */}
+      {relatedSongs.length > 0 && (
+        <section className="mt-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+              <svg className="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              同じ原曲の替え歌
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              「{song.original.artist} - {song.original.title}」を原曲とした他の替え歌です。
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {relatedSongs.map(relatedSong => (
+                <Link
+                  key={relatedSong.id}
+                  href={`/songs/${relatedSong.slug}`}
+                  className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
+                >
+                  <div className="mb-2">
+                    <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
+                      {relatedSong.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {relatedSong.lyricsPreview}
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {formatDateForDisplay(relatedSong.created)}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ナビゲーション */}
       <nav className="mt-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">

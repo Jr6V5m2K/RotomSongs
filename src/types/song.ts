@@ -21,6 +21,7 @@ export interface Song {
   sourceUrl?: string;            // X投稿URL (画像埋め込みから抽出)
   slug: string;                  // URL用スラッグ
   fileName: string;              // 元のファイル名
+  references?: string[];         // 関連楽曲のIDリスト（### Referenceセクションから抽出）
 }
 
 export interface SongListItem {
