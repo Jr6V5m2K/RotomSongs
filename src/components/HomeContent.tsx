@@ -6,7 +6,7 @@ import SongList from '@/components/SongList';
 import SearchBar from '@/components/SearchBar';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { formatDateForDisplay } from '@/lib/dateUtils';
+import { formatDateShort } from '@/lib/dateUtils';
 
 interface HomeContentProps {
   songs: SongListItem[];
@@ -51,7 +51,12 @@ export default function HomeContent({ songs }: HomeContentProps) {
     const sortedYears = Object.keys(yearGroups).sort((a, b) => b.localeCompare(a));
     return sortedYears.map(year => ({
       year,
-      songs: yearGroups[year].sort((a, b) => String(b.created).localeCompare(String(a.created))), // 各年内でも新しい順
+      songs: yearGroups[year].sort((a, b) => {
+        // IDベースで降順ソート（新しい順）
+        const aTime = parseInt(String(a.id).replace('_', ''));
+        const bTime = parseInt(String(b.id).replace('_', ''));
+        return bTime - aTime;
+      }),
       count: yearGroups[year].length
     }));
   }, []);
@@ -91,7 +96,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
           {/* ヒーロー画像 */}
           <div className="mb-8">
             <img 
-              src="/images/hero.png" 
+              src={`${process.env.NODE_ENV === 'production' ? '/RotomSongs' : ''}/images/hero.png`}
               alt="RotomSongs Hero" 
               className="w-32 h-32 md:w-40 md:h-40 mx-auto"
             />
@@ -189,19 +194,23 @@ export default function HomeContent({ songs }: HomeContentProps) {
                           <Link
                             key={song.id}
                             href={`/songs/${song.slug}`}
-                            className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
                           >
-                            <div className="mb-2">
-                              <h3 className="font-semibold text-gray-900 line-clamp-1">
-                                {song.title}
-                              </h3>
-                              <p className="text-sm text-gray-600 mt-1">
-                                {song.originalArtist} - {song.originalTitle}
-                              </p>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
+                                  {song.title}
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                  {song.originalArtist} - {song.originalTitle}
+                                </p>
+                              </div>
+                              <div className="ml-3 flex-shrink-0">
+                                <span className="text-xs text-gray-500">
+                                  {formatDateShort(song.id)}
+                                </span>
+                              </div>
                             </div>
-                            <p className="text-xs text-gray-500">
-                              {formatDateForDisplay(song.created)}
-                            </p>
                           </Link>
                         ))}
                       </div>
