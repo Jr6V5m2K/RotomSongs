@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Song, SongListItem } from '@/types/song';
 import { formatDateFromId, formatDateShort } from '@/lib/dateUtils';
+import { sanitizeLyrics, sanitizeTitle } from '@/lib/sanitize';
 
 interface SongDetailProps {
   song: Song;
@@ -149,9 +150,12 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
                 替え歌歌詞
               </h2>
               <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                <pre className="lyrics text-gray-800 whitespace-pre-wrap">
-                  {song.lyrics}
-                </pre>
+                <div 
+                  className="lyrics text-gray-800 whitespace-pre-wrap japanese-text"
+                  dangerouslySetInnerHTML={{ 
+                    __html: sanitizeLyrics(song.lyrics) 
+                  }}
+                />
               </div>
             </section>
 
@@ -183,9 +187,12 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">原曲歌詞（抜粋）</h3>
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                      <pre className="lyrics text-gray-700 whitespace-pre-wrap">
-                        {song.original.lyrics}
-                      </pre>
+                      <div 
+                        className="lyrics text-gray-700 whitespace-pre-wrap japanese-text"
+                        dangerouslySetInnerHTML={{ 
+                          __html: sanitizeLyrics(song.original.lyrics) 
+                        }}
+                      />
                     </div>
                   </div>
                 )}

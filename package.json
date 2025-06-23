@@ -15,6 +15,8 @@
     "enhanced-deploy": "node scripts/enhanced-deploy.js"
   },
   "dependencies": {
+    "@types/dompurify": "^3.0.5",
+    "dompurify": "^3.2.6",
     "fuse.js": "^7.0.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.522.0",
@@ -22,7 +24,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remark": "^15.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",

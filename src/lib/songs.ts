@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { Song, SongListItem, OriginalSong, RawMarkdownData, SearchIndex } from '@/types/song';
+import { validateFrontmatter, safeValidateFrontmatter, SongValidationError } from './validation';
 
 const songsDirectory = path.join(process.cwd(), 'Songs');
 
@@ -20,19 +21,29 @@ export async function getAllSongs(): Promise<Song[]> {
         
         const { data, content } = matter(fileContents);
         
+        // 型安全なフロントマター検証
+        const validatedFrontmatter = safeValidateFrontmatter(data, filename);
+        
+        if (!validatedFrontmatter) {
+          // 検証失敗時はnullを返し、後でフィルタリング
+          return null;
+        }
+        
         return parseSongContent({
-          frontmatter: data as any,
+          frontmatter: validatedFrontmatter,
           content,
           fileName: filename
         });
       })
     );
 
-    // RotomSongsタグを持つ楽曲のみフィルタリング
-    const filteredSongs = songs.filter(song => 
-      song.frontmatter.tags && 
-      song.frontmatter.tags.includes('RotomSongs')
-    );
+    // null（検証失敗）を除去し、RotomSongsタグを持つ楽曲のみフィルタリング
+    const filteredSongs = songs
+      .filter((song): song is Song => song !== null) // null除去
+      .filter(song => 
+        song.frontmatter.tags && 
+        song.frontmatter.tags.includes('RotomSongs')
+      );
 
     // ファイル名のIDで降順ソート（新しい順）
     return filteredSongs.sort((a, b) => {
@@ -61,13 +72,20 @@ export async function getSongById(id: string): Promise<Song | null> {
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContents);
     
+    // 型安全なフロントマター検証
+    const validatedFrontmatter = safeValidateFrontmatter(data, `${id}.md`);
+    
+    if (!validatedFrontmatter) {
+      return null;
+    }
+    
     // RotomSongsタグがない場合はnullを返す
-    if (!data.tags || !data.tags.includes('RotomSongs')) {
+    if (!validatedFrontmatter.tags || !validatedFrontmatter.tags.includes('RotomSongs')) {
       return null;
     }
     
     return parseSongContent({
-      frontmatter: data as any,
+      frontmatter: validatedFrontmatter,
       content,
       fileName: `${id}.md`
     });

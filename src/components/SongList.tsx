@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SongListItem } from '@/types/song';
 import { formatDateShort } from '@/lib/dateUtils';
+import { sanitizeLyrics } from '@/lib/sanitize';
 
 interface SongListProps {
   initialSongs: SongListItem[];
@@ -74,9 +75,12 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
                 </div>
               </div>
               
-              <p className="text-sm text-gray-700 mb-4 line-clamp-3 japanese-text">
-                {song.lyricsPreview}
-              </p>
+              <div 
+                className="text-sm text-gray-700 mb-4 line-clamp-3 japanese-text"
+                dangerouslySetInnerHTML={{ 
+                  __html: sanitizeLyrics(song.lyricsPreview) 
+                }}
+              />
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
