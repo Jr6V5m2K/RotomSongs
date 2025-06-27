@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { SongListItem } from '@/types/song';
 import SongList from '@/components/SongList';
 import SearchBar from '@/components/SearchBar';
+import SongCard from '@/components/SongCard';
+import { HeroImage } from '@/components/OptimizedImage';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { formatDateShort } from '@/lib/dateUtils';
@@ -133,10 +135,12 @@ export default function HomeContent({ songs }: HomeContentProps) {
         <div className="max-w-4xl mx-auto">
           {/* ヒーロー画像 */}
           <div className="mb-8">
-            <img 
-              src={`${process.env.NODE_ENV === 'production' ? '/RotomSongs' : ''}/images/hero.png`}
+            <HeroImage
+              src="/images/hero.png"
               alt="RotomSongs Hero" 
               className="w-32 h-32 md:w-40 md:h-40 mx-auto"
+              width={160}
+              height={160}
             />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
@@ -229,27 +233,13 @@ export default function HomeContent({ songs }: HomeContentProps) {
                     <div className="px-6 pb-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {yearSongs.map(song => (
-                          <Link
+                          <SongCard
                             key={song.id}
-                            href={`/songs/${song.slug}`}
-                            className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
-                          >
-                            <div className="flex items-start justify-between mb-2">
-                              <div className="flex-1">
-                                <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">
-                                  {song.title}
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                  {song.originalArtist} - {song.originalTitle}
-                                </p>
-                              </div>
-                              <div className="ml-3 flex-shrink-0">
-                                <span className="text-xs text-gray-500">
-                                  {formatDateShort(song.id)}
-                                </span>
-                              </div>
-                            </div>
-                          </Link>
+                            song={song}
+                            variant="compact"
+                            showLyrics={false}
+                            showSource={false}
+                          />
                         ))}
                       </div>
                     </div>

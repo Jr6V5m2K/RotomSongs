@@ -12,7 +12,7 @@ export default function Footer() {
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">
               家電和歌集は、X（旧Twitter）で投稿された替え歌をまとめたコレクションサイトです。
-              現在、100曲の替え歌を収録しています。
+              現在、101曲の替え歌を収録しています。
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-gray-600">
               <div className="flex justify-between">
                 <span>総楽曲数:</span>
-                <span className="font-medium">100曲</span>
+                <span className="font-medium">101曲</span>
               </div>
               <div className="flex justify-between">
                 <span>収録期間:</span>

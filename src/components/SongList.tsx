@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { SongListItem } from '@/types/song';
-import { formatDateShort } from '@/lib/dateUtils';
-import { sanitizeLyrics } from '@/lib/sanitize';
+import SongCard from '@/components/SongCard';
 
 interface SongListProps {
   initialSongs: SongListItem[];
@@ -57,58 +55,13 @@ export default function SongList({ initialSongs, filteredSongs, isSearching }: S
       {/* 楽曲グリッド */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {displayedSongs.map((song) => (
-          <div key={song.id} className="card card-hover">
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
-                    {song.title}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {song.originalArtist} - {song.originalTitle}
-                  </p>
-                </div>
-                <div className="ml-3 flex-shrink-0">
-                  <span className="text-xs text-gray-500">
-                    {formatDateShort(song.id)}
-                  </span>
-                </div>
-              </div>
-              
-              <div 
-                className="text-sm text-gray-700 mb-4 line-clamp-3 japanese-text"
-                dangerouslySetInnerHTML={{ 
-                  __html: sanitizeLyrics(song.lyricsPreview) 
-                }}
-              />
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  {song.sourceUrl ? (
-                    <a
-                      href={song.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-orange-100 hover:text-orange-700 transition-colors duration-200"
-                    >
-                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                      </svg>
-                      元ポストを見る
-                    </a>
-                  ) : (
-                    <span className="text-xs text-gray-400">ソースなし</span>
-                  )}
-                </div>
-                <Link
-                  href={`/songs/${song.slug}`}
-                  className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors duration-200"
-                >
-                  詳細 →
-                </Link>
-              </div>
-            </div>
-          </div>
+          <SongCard
+            key={song.id}
+            song={song}
+            variant="default"
+            showLyrics={true}
+            showSource={true}
+          />
         ))}
       </div>
 

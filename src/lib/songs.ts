@@ -1,120 +1,30 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { Song, SongListItem, OriginalSong, RawMarkdownData, SearchIndex } from '@/types/song';
-import { validateFrontmatter, safeValidateFrontmatter, SongValidationError } from './validation';
+import { Song, SongListItem, SearchIndex } from '@/types/song';
+import { SongRepository, SongDataTransformer } from './songRepository';
 
-const songsDirectory = path.join(process.cwd(), 'Songs');
+// シングルトンのリポジトリインスタンス
+const songRepository = new SongRepository();
 
 /**
  * 全ての楽曲ファイルを読み込んでパースする
+ * @deprecated この関数は将来的に非公開になる予定です。代わりに getSongList() の使用を推奨します。
  */
 export async function getAllSongs(): Promise<Song[]> {
-  try {
-    const filenames = fs.readdirSync(songsDirectory);
-    const markdownFiles = filenames.filter(name => name.endsWith('.md'));
-
-    const songs = await Promise.all(
-      markdownFiles.map(async (filename) => {
-        const filePath = path.join(songsDirectory, filename);
-        const fileContents = fs.readFileSync(filePath, 'utf8');
-        
-        const { data, content } = matter(fileContents);
-        
-        // 型安全なフロントマター検証
-        const validatedFrontmatter = safeValidateFrontmatter(data, filename);
-        
-        if (!validatedFrontmatter) {
-          // 検証失敗時はnullを返し、後でフィルタリング
-          return null;
-        }
-        
-        return parseSongContent({
-          frontmatter: validatedFrontmatter,
-          content,
-          fileName: filename
-        });
-      })
-    );
-
-    // null（検証失敗）を除去し、RotomSongsタグを持つ楽曲のみフィルタリング
-    const filteredSongs = songs
-      .filter((song): song is Song => song !== null) // null除去
-      .filter(song => 
-        song.frontmatter.tags && 
-        song.frontmatter.tags.includes('RotomSongs')
-      );
-
-    // ファイル名のIDで降順ソート（新しい順）
-    return filteredSongs.sort((a, b) => {
-      // IDを数値として比較（YYYYMMDDHHMM形式）
-      const aTime = parseInt(String(a.id).replace('_', ''));
-      const bTime = parseInt(String(b.id).replace('_', ''));
-      return bTime - aTime;
-    });
-  } catch (error) {
-    console.error('Error reading songs directory:', error);
-    return [];
-  }
+  return songRepository.getAllSongs();
 }
 
 /**
  * IDによる単一楽曲の取得
  */
 export async function getSongById(id: string): Promise<Song | null> {
-  try {
-    const filePath = path.join(songsDirectory, `${id}.md`);
-    
-    if (!fs.existsSync(filePath)) {
-      return null;
-    }
-
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const { data, content } = matter(fileContents);
-    
-    // 型安全なフロントマター検証
-    const validatedFrontmatter = safeValidateFrontmatter(data, `${id}.md`);
-    
-    if (!validatedFrontmatter) {
-      return null;
-    }
-    
-    // RotomSongsタグがない場合はnullを返す
-    if (!validatedFrontmatter.tags || !validatedFrontmatter.tags.includes('RotomSongs')) {
-      return null;
-    }
-    
-    return parseSongContent({
-      frontmatter: validatedFrontmatter,
-      content,
-      fileName: `${id}.md`
-    });
-  } catch (error) {
-    console.error(`Error reading song ${id}:`, error);
-    return null;
-  }
+  return songRepository.getSongById(id);
 }
 
 /**
  * 一覧表示用の軽量データを取得
  */
 export async function getSongList(): Promise<SongListItem[]> {
-  const songs = await getAllSongs();
-  
-  return songs.map(song => ({
-    id: song.id || '',
-    title: song.frontmatter?.title || '',
-    created: String(song.frontmatter?.created || ''),
-    updated: String(song.frontmatter?.updated || ''),
-    originalArtist: song.original?.artist || '',
-    originalTitle: song.original?.title || '',
-    lyricsPreview: generateLyricsPreview(song.lyrics || ''),
-    lyrics: song.lyrics || '',
-    originalLyrics: song.original?.lyrics || '',
-    tags: song.frontmatter?.tags || [],
-    slug: song.slug || '',
-    sourceUrl: song.sourceUrl
-  }));
+  const songs = await songRepository.getAllSongs();
+  return SongDataTransformer.toListItems(songs);
 }
 
 /**
@@ -129,15 +39,15 @@ export async function generateSearchIndex(): Promise<SearchIndex> {
   
   const searchableContent: { [songId: string]: string } = {};
   
-  const allSongs = await getAllSongs();
-  allSongs.forEach(song => {
+  // SongListItemから検索用テキストを生成（より効率的）
+  songs.forEach(song => {
     searchableContent[song.id] = [
-      song.frontmatter.title,
+      song.title,
       song.lyrics,
-      song.original.artist,
-      song.original.title,
-      song.original.lyrics,
-      song.frontmatter.tags.join(' ')
+      song.originalArtist,
+      song.originalTitle,
+      song.originalLyrics,
+      song.tags.join(' ')
     ].join(' ').toLowerCase();
   });
 
@@ -153,141 +63,9 @@ export async function generateSearchIndex(): Promise<SearchIndex> {
  * 静的パラメータの生成（全楽曲のIDを取得）
  */
 export async function generateStaticParams(): Promise<{ id: string }[]> {
-  try {
-    const filenames = fs.readdirSync(songsDirectory);
-    const markdownFiles = filenames.filter(name => name.endsWith('.md'));
-    
-    // RotomSongsタグを持つファイルのみ静的生成対象とする
-    const rotomSongFiles = markdownFiles.filter(filename => {
-      const filePath = path.join(songsDirectory, filename);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
-      return data.tags && data.tags.includes('RotomSongs');
-    });
-    
-    return rotomSongFiles.map(filename => ({
-      id: filename.replace(/\.md$/, '')
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
+  return songRepository.generateStaticParams();
 }
 
-/**
- * Markdownコンテンツから楽曲データをパース
- */
-function parseSongContent(rawData: RawMarkdownData): Song {
-  const { frontmatter, content, fileName } = rawData;
-  
-  // コンテンツを各セクションに分割
-  const sections = parseMarkdownSections(content);
-  
-  const id = fileName.replace(/\.md$/, '');
-  
-  return {
-    id,
-    frontmatter,
-    lyrics: sections.lyrics || '',
-    original: {
-      artist: sections.originalArtist || '',
-      title: sections.originalTitle || '',
-      lyrics: sections.originalLyrics || ''
-    },
-    sourceUrl: extractSourceUrl(sections.source || ''),
-    slug: generateSlug(id),
-    fileName,
-    references: parseReferences(sections.reference || '')
-  };
-}
-
-/**
- * Markdownのセクションをパース
- */
-function parseMarkdownSections(content: string) {
-  const sections: { [key: string]: string } = {};
-  
-  // ### で始まるセクションを分割
-  const sectionMatches = content.split(/(?=^###\s)/m);
-  
-  sectionMatches.forEach(section => {
-    const lines = section.trim().split('\n');
-    if (lines.length === 0) return;
-    
-    const headerLine = lines[0];
-    const bodyLines = lines.slice(1);
-    
-    if (headerLine.startsWith('### Source')) {
-      sections.source = bodyLines.join('\n').trim();
-    } else if (headerLine.startsWith('### Lyrics')) {
-      sections.lyrics = bodyLines.join('\n').trim();
-    } else if (headerLine.startsWith('### Original')) {
-      // Original セクション内の #### Artist, #### Title, #### Lyrics を処理
-      const originalContent = bodyLines.join('\n');
-      const artistMatch = originalContent.match(/#### Artist\s*\n(.*?)(?=\n####|\n\n|$)/s);
-      const titleMatch = originalContent.match(/#### Title\s*\n(.*?)(?=\n####|\n\n|$)/s);
-      const lyricsMatch = originalContent.match(/#### Lyrics\s*\n(.*?)(?=\n####|$)/s);
-      
-      sections.originalArtist = artistMatch ? artistMatch[1].trim() : '';
-      sections.originalTitle = titleMatch ? titleMatch[1].trim() : '';
-      sections.originalLyrics = lyricsMatch ? lyricsMatch[1].trim() : '';
-    } else if (headerLine.startsWith('### Reference')) {
-      // Reference セクション内の [[楽曲ID]] 形式のリンクを抽出
-      const referenceContent = bodyLines.join('\n').trim();
-      sections.reference = referenceContent;
-    }
-  });
-  
-  return sections;
-}
-
-/**
- * SourceセクションからX投稿URLを抽出
- */
-function extractSourceUrl(sourceContent: string): string | undefined {
-  // ![](https://x.com/...) または ![](http://x.com/...) の形式からURLを抽出
-  const urlMatch = sourceContent.match(/!\[.*?\]\((https?:\/\/x\.com\/[^)]+)\)/);
-  return urlMatch ? urlMatch[1] : undefined;
-}
-
-/**
- * Referenceセクションから楽曲IDのリストを抽出
- */
-function parseReferences(referenceContent: string): string[] {
-  if (!referenceContent.trim()) {
-    return [];
-  }
-  
-  // [[楽曲ID]] 形式のリンクを抽出
-  const linkMatches = referenceContent.match(/\[\[([^\]]+)\]\]/g);
-  
-  if (!linkMatches) {
-    return [];
-  }
-  
-  return linkMatches.map(match => {
-    // [[楽曲ID]] から 楽曲ID を抽出
-    const idMatch = match.match(/\[\[([^\]]+)\]\]/);
-    return idMatch ? idMatch[1] : '';
-  }).filter(id => id.length > 0);
-}
-
-/**
- * 歌詞のプレビューテキストを生成（最初の2行程度）
- */
-function generateLyricsPreview(lyrics: string): string {
-  const lines = lyrics.split('\n').filter(line => line.trim() !== '');
-  const previewLines = lines.slice(0, 2);
-  const preview = previewLines.join(' ').substring(0, 100);
-  return preview.length < lyrics.length ? `${preview}...` : preview;
-}
-
-/**
- * URL用スラッグを生成
- */
-function generateSlug(id: string): string {
-  return id; // 現在はIDをそのまま使用（20230209_1519）
-}
 
 /**
  * 関連楽曲の情報を取得
@@ -298,7 +76,6 @@ export async function getRelatedSongs(referenceIds: string[]): Promise<SongListI
   }
   
   const allSongs = await getSongList();
-  
   return allSongs.filter(song => referenceIds.includes(song.id));
 }
 
@@ -320,4 +97,12 @@ export async function getSongNavigation(currentId: string): Promise<{
     prev: currentIndex > 0 ? songs[currentIndex - 1] : null,
     next: currentIndex < songs.length - 1 ? songs[currentIndex + 1] : null
   };
+}
+
+/**
+ * 楽曲データリポジトリへの直接アクセス（高度な機能用）
+ * @internal 内部使用のみ。通常は上記の公開関数を使用してください。
+ */
+export function getSongRepository(): SongRepository {
+  return songRepository;
 }
