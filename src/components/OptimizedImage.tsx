@@ -67,6 +67,13 @@ export default function OptimizedImage({
     return () => observer.disconnect();
   }, [priority, isInView]);
 
+  // src変更時の状態リセット
+  useEffect(() => {
+    setHasError(false);
+    setIsLoaded(false);
+    setImageSrc('');
+  }, [src]);
+
   // ベースパス対応（GitHub Pages）
   useEffect(() => {
     if (isInView || priority) {
