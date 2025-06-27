@@ -270,7 +270,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">豊富なコレクション</h3>
                 <p className="text-gray-600 japanese-text">
-                  2023年から継続的に投稿された{songs.length}曲の替え歌を、時系列順に整理して収録しています。
+                  2023年から継続的に投稿された{songs.length}曲の替え歌を、時系列順に収録しています。
                 </p>
               </div>
               

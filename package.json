@@ -12,7 +12,7 @@
     "type-check": "tsc --noEmit",
     "deploy": "node scripts/auto-deploy.js",
     "rotomdeploy": "node scripts/auto-deploy.js",
-    "enhanced-deploy": "node scripts/enhanced-deploy.js"
+    "enhanced-deploy": "node --expose-gc --max-old-space-size=2048 scripts/enhanced-deploy.js"
   },
   "dependencies": {
     "@types/dompurify": "^3.0.5",
