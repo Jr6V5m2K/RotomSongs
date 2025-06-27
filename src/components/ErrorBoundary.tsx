@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       console.error('Error:', error.message);
       console.error('Stack:', error.stack);
       console.error('Component Stack:', errorInfo.componentStack);
-      console.error('Props:', this.props);
+      console.error('Props Keys:', Object.keys(this.props));
       console.error('User Agent:', navigator.userAgent);
       console.error('URL:', window.location.href);
       console.error('Timestamp:', new Date().toISOString());
