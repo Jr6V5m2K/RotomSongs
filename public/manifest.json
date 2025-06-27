@@ -1,0 +1,34 @@
+{
+  "name": "RotomSongs - 家電和歌集",
+  "short_name": "RotomSongs",
+  "description": "家電和歌集 - X（旧Twitter）で投稿された替え歌コレクション",
+  "start_url": "/RotomSongs/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ea580c",
+  "lang": "ja",
+  "scope": "/RotomSongs/",
+  "icons": [
+    {
+      "src": "/RotomSongs/images/hero.png",
+      "sizes": "160x160",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "楽曲を探す",
+      "short_name": "楽曲検索",
+      "description": "替え歌コレクションを検索",
+      "url": "/RotomSongs/#songs",
+      "icons": [
+        {
+          "src": "/RotomSongs/images/hero.png",
+          "sizes": "160x160"
+        }
+      ]
+    }
+  ]
+}

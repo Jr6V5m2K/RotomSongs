@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { SongListItem } from '@/types/song';
 import SongList from '@/components/SongList';
 import SearchBar from '@/components/SearchBar';
@@ -89,7 +89,9 @@ export default function HomeContent({ songs }: HomeContentProps) {
     }
   }, []);
 
-  const yearlyGroups = groupSongsByYear(songs);
+  const yearlyGroups = useMemo(() => {
+    return groupSongsByYear(songs);
+  }, [songs, groupSongsByYear]);
 
   // 年度の展開/折りたたみ切り替え
   const toggleYear = (year: string) => {
