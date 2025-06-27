@@ -72,6 +72,7 @@ export default function OptimizedImage({
     if (isInView || priority) {
       const basePath = process.env.NODE_ENV === 'production' ? '/RotomSongs' : '';
       const fullSrc = src.startsWith('http') ? src : `${basePath}${src}`;
+      console.log('OptimizedImage - Loading:', { src, basePath, fullSrc });
       setImageSrc(fullSrc);
     }
   }, [isInView, priority, src]);
