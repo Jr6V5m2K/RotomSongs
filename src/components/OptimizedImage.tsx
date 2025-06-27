@@ -116,7 +116,7 @@ export default function OptimizedImage({
         <rect width="100%" height="100%" fill="#f3f4f6"/>
         <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
               fill="#9ca3af" font-family="sans-serif" font-size="14">
-          読み込み中...
+          Loading...
         </text>
       </svg>
     `)}`;
@@ -131,7 +131,7 @@ export default function OptimizedImage({
         <rect width="100%" height="100%" fill="#fef2f2"/>
         <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
               fill="#ef4444" font-family="sans-serif" font-size="12">
-          画像を読み込めません
+          Image failed
         </text>
       </svg>
     `)}`;
@@ -149,7 +149,7 @@ export default function OptimizedImage({
       <img
         ref={imgRef}
         src={getErrorFallback()}
-        alt={`${alt} (画像読み込みエラー)`}
+        alt={`${alt} (Image load error)`}
         className={combinedClasses}
         width={width}
         height={height}
