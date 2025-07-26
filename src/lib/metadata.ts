@@ -6,7 +6,7 @@ const baseUrl = process.env.NODE_ENV === 'production'
 
 export const siteConfig = {
   name: 'RotomSongs - 家電和歌集',
-  description: '替え歌コレクション「家電和歌集」- X（旧Twitter）で投稿された110曲の替え歌を体系的にまとめたコレクションサイトです。',
+  description: '替え歌コレクション「家電和歌集」- X（旧Twitter）で投稿された111曲の替え歌を体系的にまとめたコレクションサイトです。',
   url: baseUrl,
   ogImage: `${baseUrl}/images/social/twitter.png`,
   creator: 'Jr6V5m2K',
