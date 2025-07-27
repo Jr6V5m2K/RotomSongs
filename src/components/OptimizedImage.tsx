@@ -9,7 +9,7 @@ interface OptimizedImageProps {
   width?: number;
   height?: number;
   priority?: boolean; // LCP最適化用
-  placeholder?: 'blur' | 'empty';
+  placeholder?: 'blur-sm' | 'empty';
   blurDataURL?: string;
   onLoad?: () => void;
   onError?: () => void;
@@ -79,7 +79,6 @@ export default function OptimizedImage({
     if (isInView || priority) {
       const basePath = process.env.NODE_ENV === 'production' ? '/RotomSongs' : '';
       const fullSrc = src.startsWith('http') ? src : `${basePath}${src}`;
-      console.log('OptimizedImage - Loading:', { src, basePath, fullSrc });
       setImageSrc(fullSrc);
     }
   }, [isInView, priority, src]);
@@ -114,7 +113,7 @@ export default function OptimizedImage({
 
   // プレースホルダーの生成
   const getPlaceholder = () => {
-    if (placeholder === 'blur' && blurDataURL) {
+    if (placeholder === 'blur-sm' && blurDataURL) {
       return blurDataURL;
     }
     
@@ -209,22 +208,24 @@ export default function OptimizedImage({
       )}
       
       {/* メイン画像 */}
-      <img
-        ref={imgRef}
-        src={getOptimizedSrc(imageSrc)}
-        alt={alt}
-        className={combinedClasses}
-        width={width}
-        height={height}
-        onLoad={handleLoad}
-        onError={handleError}
-        style={{
-          opacity: isLoaded ? 1 : 0
-        }}
-        // SEO and accessibility improvements
-        loading={priority ? 'eager' : 'lazy'}
-        decoding="async"
-      />
+      {imageSrc && (
+        <img
+          ref={imgRef}
+          src={getOptimizedSrc(imageSrc)}
+          alt={alt}
+          className={combinedClasses}
+          width={width}
+          height={height}
+          onLoad={handleLoad}
+          onError={handleError}
+          style={{
+            opacity: isLoaded ? 1 : 0
+          }}
+          // SEO and accessibility improvements
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      )}
     </div>
   );
 }
@@ -258,7 +259,7 @@ export function AvatarImage({
       width={size}
       height={size}
       className={`rounded-full ${className}`}
-      placeholder="blur"
+      placeholder="blur-sm"
     />
   );
 }

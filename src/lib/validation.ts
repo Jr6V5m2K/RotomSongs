@@ -11,13 +11,23 @@ export const SongFrontmatterSchema = z.object({
     if (val instanceof Date) {
       return val.toISOString().split('T')[0]; // YYYY-MM-DD形式
     }
-    return String(val);
+    // ISO文字列の場合は日付部分のみ抽出
+    const stringVal = String(val);
+    if (stringVal.includes('T')) {
+      return stringVal.split('T')[0];
+    }
+    return stringVal;
   }),
   updated: z.union([z.string(), z.date()]).transform(val => {
     if (val instanceof Date) {
       return val.toISOString().split('T')[0]; // YYYY-MM-DD形式
     }
-    return String(val);
+    // ISO文字列の場合は日付部分のみ抽出
+    const stringVal = String(val);
+    if (stringVal.includes('T')) {
+      return stringVal.split('T')[0];
+    }
+    return stringVal;
   }),
   tags: z.array(z.string()).optional().default([])
 });
@@ -82,6 +92,7 @@ export function safeValidateFrontmatter(data: unknown, filename?: string): Valid
     // 開発環境では詳細エラーを表示
     if (process.env.NODE_ENV === 'development') {
       console.error('検証失敗データ:', data);
+      console.error('ファイル名:', filename);
     }
     
     return null;

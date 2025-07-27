@@ -65,7 +65,7 @@ export default function SongCard({
             {song.originalArtist} - {song.originalTitle}
           </p>
         </div>
-        <div className="ml-3 flex-shrink-0">
+        <div className="ml-3 shrink-0">
           <span className="text-xs text-gray-500">
             {formatDateShort(song.id)}
           </span>

@@ -214,10 +214,10 @@ export default function HomeContent({ songs }: HomeContentProps) {
             
             <div className="space-y-4">
               {yearlyGroups.map(({ year, songs: yearSongs, count }) => (
-                <div key={year} className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div key={year} className="bg-white rounded-lg shadow-xs border border-gray-200">
                   <button
                     onClick={() => toggleYear(year)}
-                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors rounded-lg"
+                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors rounded-lg cursor-pointer"
                   >
                     <div className="flex items-center space-x-3">
                       {expandedYears.has(year) ? (
@@ -255,7 +255,7 @@ export default function HomeContent({ songs }: HomeContentProps) {
 
       {/* コレクションの特徴セクション（検索時は非表示） */}
       {!isSearching && (
-        <section className="py-16 bg-white rounded-2xl shadow-sm border border-gray-200 mb-16">
+        <section className="py-16 bg-white rounded-2xl shadow-xs border border-gray-200 mb-16">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
               コレクションの特徴

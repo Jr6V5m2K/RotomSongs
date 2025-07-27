@@ -1,9 +1,90 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 /* カスタムフォントの読み込み */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap')
+layer(utilities);
+
+@config '../../tailwind.config.js';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* コンポーネント用カスタムスタイル */
+@utility btn-primary {
+  @apply bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+}
+@utility btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+}
+@utility card {
+  @apply bg-white rounded-lg shadow-xs border border-gray-200 overflow-hidden;
+}
+@utility card-hover {
+  @apply hover:shadow-md hover:border-gray-300 transition-all duration-200;
+}
+@utility lyrics {
+  /* 歌詞表示用のスタイル */
+  @apply whitespace-pre-line leading-relaxed text-gray-700;
+  font-family: 'Noto Sans JP', serif;
+}
+@utility japanese-text {
+  /* 日本語テキスト用の行間調整 */
+  @apply leading-relaxed;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+@utility search-input {
+  /* 検索ボックス */
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-hidden transition-all duration-200;
+}
+@utility tag {
+  /* タグスタイル */
+  @apply inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full;
+}
+@utility container-responsive {
+  /* モバイル対応のコンテナ */
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* ユーティリティクラス */
+@utility text-balance {
+  text-wrap: balance;
+}
+@utility scrollbar-thin {
+  /* スクロールバーのカスタマイズ */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
 
 /* ベーススタイル */
 @layer base {
@@ -13,81 +94,6 @@
   
   body {
     @apply text-gray-900 bg-gray-50;
-  }
-}
-
-/* コンポーネント用カスタムスタイル */
-@layer components {
-  .btn-primary {
-    @apply bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
-  }
-  
-  .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
-  }
-  
-  .card-hover {
-    @apply hover:shadow-md hover:border-gray-300 transition-all duration-200;
-  }
-  
-  /* 歌詞表示用のスタイル */
-  .lyrics {
-    @apply whitespace-pre-line leading-relaxed text-gray-700;
-    font-family: 'Noto Sans JP', serif;
-  }
-  
-  /* 日本語テキスト用の行間調整 */
-  .japanese-text {
-    @apply leading-relaxed;
-    font-family: 'Noto Sans JP', sans-serif;
-  }
-  
-  /* 検索ボックス */
-  .search-input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200;
-  }
-  
-  /* タグスタイル */
-  .tag {
-    @apply inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full;
-  }
-  
-  /* モバイル対応のコンテナ */
-  .container-responsive {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-}
-
-/* ユーティリティクラス */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-  
-  /* スクロールバーのカスタマイズ */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 #f1f5f9;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-track {
-    @apply bg-gray-100;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded-full;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400;
   }
 }
 

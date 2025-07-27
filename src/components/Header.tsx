@@ -14,11 +14,11 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white shadow-xs border-b border-gray-200 sticky top-0 z-50">
       <div className="container-responsive">
         <div className="flex justify-between items-center h-16">
           {/* ロゴ・サイト名 */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link 
               href="/" 
               className="text-xl font-bold text-gray-900 hover:text-orange-600 transition-colors duration-200"

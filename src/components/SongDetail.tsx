@@ -70,9 +70,9 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
       </nav>
 
       {/* メインコンテンツ */}
-      <article className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <article className="bg-white rounded-2xl shadow-xs border border-gray-200 overflow-hidden">
         {/* ヘッダー */}
-        <header className="bg-gradient-to-r from-orange-50 to-red-50 px-6 py-8 border-b border-gray-200">
+        <header className="bg-linear-to-r from-orange-50 to-red-50 px-6 py-8 border-b border-gray-200">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="flex-1">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
@@ -115,7 +115,7 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
               )}
               
               <button
-                className="btn-secondary text-sm"
+                className="btn-secondary text-sm cursor-pointer"
                 onClick={handleShare}
               >
                 <svg className="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
       {/* 同じ原曲の替え歌セクション */}
       {relatedSongs.length > 0 && (
         <section className="mt-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-2xl shadow-xs border border-gray-200 p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <svg className="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -232,7 +232,7 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
                         {relatedSong.lyricsPreview}
                       </p>
                     </div>
-                    <div className="ml-3 flex-shrink-0">
+                    <div className="ml-3 shrink-0">
                       <span className="text-xs text-gray-500">
                         {formatDateShort(relatedSong.id)}
                       </span>
