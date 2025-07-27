@@ -1,8 +1,9 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { Ref } from 'react';
 
 interface SearchInputProps {
+  ref?: Ref<HTMLInputElement>;
   value: string;
   onChange: (value: string) => void;
   onFocus?: () => void;
@@ -21,7 +22,8 @@ interface SearchInputProps {
  * 再利用可能な検索入力コンポーネント
  * アクセシビリティ対応とカスタマイズ性を重視
  */
-const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(({
+function SearchInput({
+  ref,
   value,
   onChange,
   onFocus,
@@ -35,7 +37,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(({
   'aria-label': ariaLabel,
   'aria-describedby': ariaDescribedBy,
   ...props
-}, ref) => {
+}: SearchInputProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -98,9 +100,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(({
       </div>
     </div>
   );
-});
-
-SearchInput.displayName = 'SearchInput';
+}
 
 /**
  * ローディングスピナーコンポーネント
