@@ -23,24 +23,28 @@
 
 #### Core Framework
 ```yaml
-Next.js: 14.2.4
+Next.js: 15.4
   - App Router使用（pages routerから移行）
   - 静的サイト生成（SSG）に最適化
   - GitHub Pages対応設定
+  - Turbopack安定化、React 19サポート
 
-React: 18.3.1
+React: 19.1.0
   - 関数コンポーネント + Hooks パターン
   - TypeScript厳格モード対応
   - エラーバウンダリ実装
+  - ref-as-props パターン対応
+  - React Compiler最適化
 ```
 
 #### スタイリング & UI
 ```yaml
-Tailwind CSS: 3.4.4
-  - ユーティリティファースト設計
-  - カスタムカラーパレット（primary/secondary）
-  - レスポンシブデザイン対応
-  - タイポグラフィプラグイン使用
+Tailwind CSS: 4.1.11
+  - CSS-firstコンフィグ當理ラファスト設計
+  - @theme ディレクティブでカスタムテーマ
+  - フルビルド5倍高速化
+  - インクリメンタルビルド100倍以上高速化
+  - text-shadow、mask utilities等の新機能
 
 Lucide React: 0.522.0
   - 軽量アイコンライブラリ
@@ -781,4 +785,4 @@ Technical Debt: Minimal
 
 *技術アーキテクチャ設計書 v1.0*  
 *作成者: Claude Code (リバースエンジニアリング)*  
-*最終更新: 2025年7月27日*
+*最終更新: 2025年7月28日*

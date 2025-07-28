@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: SongPageProps) {
 }
 
 export async function generateStaticParams() {
-  // 全83曲の静的パラメータを生成
+  // 全111曲の静的パラメータを生成
   return await getStaticParams();
 }
 
