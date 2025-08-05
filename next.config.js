@@ -11,9 +11,7 @@ const nextConfig = {
   assetPrefix: process.env.NODE_ENV === 'production' ? '/RotomSongs' : '',
   basePath: process.env.NODE_ENV === 'production' ? '/RotomSongs' : '',
   // GitHub Pages用の設定
-  experimental: {
-    esmExternals: false
-  },
+  // experimental.esmExternals removed due to Next.js 15.4 compatibility issues
   // 静的パスの生成
   generateBuildId: () => 'build',
   
