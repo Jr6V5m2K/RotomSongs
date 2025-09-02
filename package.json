@@ -1,7 +1,7 @@
 {
   "name": "rotom-songs",
   "version": "1.0.0",
-  "description": "RotomSongs - 家電和歌集: 118曲の替え歌コレクション",
+  "description": "RotomSongs - 家電和歌集: 119曲の替え歌コレクション",
   "private": true,
   "scripts": {
     "dev": "next dev",
