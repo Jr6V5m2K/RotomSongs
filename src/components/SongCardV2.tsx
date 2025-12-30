@@ -44,18 +44,13 @@ export default function SongCardV2({ song, hideLyrics = false, isClient: parentI
                 {!hideLyrics && (
                     <div className="flex-grow flex items-center justify-center py-4 relative">
                         {/* Background watermak/pattern could go here */}
-                        {isClient ? (
-                            <div
-                                className="text-stone-600 font-serif leading-loose text-center line-clamp-4 japanese-text text-sm md:text-base opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                                dangerouslySetInnerHTML={{
-                                    __html: sanitizeLyrics(song.lyricsPreview)
-                                }}
-                            />
-                        ) : (
-                            <div className="text-stone-600 font-serif leading-loose text-center line-clamp-4 japanese-text text-sm md:text-base opacity-80">
-                                {song.lyricsPreview}
-                            </div>
-                        )}
+                        <div
+                            className="text-stone-600 font-serif leading-loose text-center line-clamp-4 japanese-text text-sm md:text-base opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                            dangerouslySetInnerHTML={{
+                                __html: sanitizeLyrics(song.lyricsPreview)
+                            }}
+                            suppressHydrationWarning
+                        />
                     </div>
                 )}
 

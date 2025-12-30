@@ -5,7 +5,14 @@
  * @returns basePath付きのパス
  */
 export function getAssetPath(path: string): string {
-  // 本番環境ではbasePathを追加
+  // サーバーサイドでのみbasePathを追加
+  // クライアントサイドでは常に空（Next.jsのbasePathが自動的に適用される）
+  if (typeof window !== 'undefined') {
+    // クライアントサイド: そのまま返す
+    return path.startsWith('/') ? path : `/${path}`;
+  }
+
+  // サーバーサイド: 本番環境のみbasePathを追加
   const basePath = process.env.NODE_ENV === 'production' ? '/RotomSongs' : '';
 
   // 既にhttpで始まっている場合（外部URL）はそのまま返す

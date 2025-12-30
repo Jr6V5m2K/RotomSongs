@@ -116,18 +116,13 @@ export default function SongDetailV2({ song, navigation, relatedSongs }: SongDet
                             <div className="w-1 h-8 bg-orange-400 rounded-full"></div>
                             <h2 className="text-xl font-serif text-stone-800">替え歌歌詞</h2>
                         </div>
-                        {isClient ? (
-                            <div
-                                className="font-serif leading-loose text-stone-700 whitespace-pre-wrap japanese-text text-base md:text-lg"
-                                dangerouslySetInnerHTML={{
-                                    __html: sanitizeLyrics(song.lyrics)
-                                }}
-                            />
-                        ) : (
-                            <div className="font-serif leading-loose text-stone-700 whitespace-pre-wrap japanese-text text-base md:text-lg">
-                                {song.lyrics}
-                            </div>
-                        )}
+                        <div
+                            className="font-serif leading-loose text-stone-700 whitespace-pre-wrap japanese-text text-base md:text-lg"
+                            dangerouslySetInnerHTML={{
+                                __html: sanitizeLyrics(song.lyrics)
+                            }}
+                            suppressHydrationWarning
+                        />
                     </section>
 
                     {/* Original Song Info */}
@@ -150,18 +145,13 @@ export default function SongDetailV2({ song, navigation, relatedSongs }: SongDet
                             {song.original.lyrics && (
                                 <div className="pt-6 border-t border-stone-200/50">
                                     <h3 className="text-xs font-sans text-stone-400 uppercase tracking-widest mb-4">Original Lyrics</h3>
-                                    {isClient ? (
-                                        <div
-                                            className="font-serif leading-loose text-stone-600 text-sm whitespace-pre-wrap japanese-text"
-                                            dangerouslySetInnerHTML={{
-                                                __html: sanitizeLyrics(song.original.lyrics)
-                                            }}
-                                        />
-                                    ) : (
-                                        <div className="font-serif leading-loose text-stone-600 text-sm whitespace-pre-wrap japanese-text">
-                                            {song.original.lyrics}
-                                        </div>
-                                    )}
+                                    <div
+                                        className="font-serif leading-loose text-stone-600 text-sm whitespace-pre-wrap japanese-text"
+                                        dangerouslySetInnerHTML={{
+                                            __html: sanitizeLyrics(song.original.lyrics)
+                                        }}
+                                        suppressHydrationWarning
+                                    />
                                 </div>
                             )}
                         </div>
