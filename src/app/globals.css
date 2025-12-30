@@ -1,8 +1,8 @@
-@import 'tailwindcss';
+/* カスタムフォントの読み込み（Tailwindより先に読み込む） */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Waterfall&display=swap');
 
-/* カスタムフォントの読み込み */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap')
-layer(utilities);
+@import 'tailwindcss';
 
 @config '../../tailwind.config.js';
 
@@ -15,6 +15,7 @@ layer(utilities);
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -28,33 +29,41 @@ layer(utilities);
 @utility btn-primary {
   @apply bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
 }
+
 @utility btn-secondary {
   @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
 }
+
 @utility card {
   @apply bg-white rounded-lg shadow-xs border border-gray-200 overflow-hidden;
 }
+
 @utility card-hover {
   @apply hover:shadow-md hover:border-gray-300 transition-all duration-200;
 }
+
 @utility lyrics {
   /* 歌詞表示用のスタイル */
   @apply whitespace-pre-line leading-relaxed text-gray-700;
   font-family: 'Noto Sans JP', serif;
 }
+
 @utility japanese-text {
   /* 日本語テキスト用の行間調整 */
   @apply leading-relaxed;
   font-family: 'Noto Sans JP', sans-serif;
 }
+
 @utility search-input {
   /* 検索ボックス */
   @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-hidden transition-all duration-200;
 }
+
 @utility tag {
   /* タグスタイル */
   @apply inline-block px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full;
 }
+
 @utility container-responsive {
   /* モバイル対応のコンテナ */
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
@@ -64,6 +73,7 @@ layer(utilities);
 @utility text-balance {
   text-wrap: balance;
 }
+
 @utility scrollbar-thin {
   /* スクロールバーのカスタマイズ */
   scrollbar-width: thin;
@@ -91,7 +101,7 @@ layer(utilities);
   html {
     font-family: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
   }
-  
+
   body {
     @apply text-gray-900 bg-gray-50;
   }
@@ -99,18 +109,24 @@ layer(utilities);
 
 /* アニメーション */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -127,7 +143,7 @@ layer(utilities);
   .no-print {
     display: none !important;
   }
-  
+
   .print-break-before {
     break-before: page;
   }

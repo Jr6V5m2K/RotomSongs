@@ -4,7 +4,7 @@ const nextConfig = {
   output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
-  distDir: 'out',
+  skipTrailingSlashRedirect: true,
   images: {
     unoptimized: true
   },
@@ -14,13 +14,13 @@ const nextConfig = {
   // experimental.esmExternals removed due to Next.js 15.4 compatibility issues
   // 静的パスの生成
   generateBuildId: () => 'build',
-  
+
   // Content Security Policy (CSP) 設定
   // 注意: GitHub Pagesでは独自ヘッダーは無視されるが、開発環境とセルフホスト環境での保護を提供
   async headers() {
     // 開発環境では緩いCSPを使用（Next.js 15はunsafe-evalが必要）
     const isDevelopment = process.env.NODE_ENV === 'development';
-    
+
     return [
       {
         source: '/(.*)',
@@ -29,7 +29,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              isDevelopment 
+              isDevelopment
                 ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'" // 開発環境: unsafe-evalを許可
                 : "script-src 'self' 'unsafe-inline'", // 本番環境: unsafe-evalを禁止
               "style-src 'self' 'unsafe-inline' fonts.googleapis.com", // Tailwind CSS用

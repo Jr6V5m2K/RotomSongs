@@ -31,6 +31,7 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['Fira Code', 'monospace'],
+        waterfall: ['Waterfall', 'cursive'],
       },
       typography: {
         DEFAULT: {

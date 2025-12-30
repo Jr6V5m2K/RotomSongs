@@ -14,7 +14,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "target": "es2018",
     "downlevelIteration": true,
@@ -44,11 +44,14 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "out/types/**/*.ts"
+    "out/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "out",
-    ".next"
+    ".next",
+    "src/components/archive",
+    "src/app/archive"
   ]
 }
