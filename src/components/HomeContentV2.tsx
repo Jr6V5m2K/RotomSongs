@@ -24,8 +24,8 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // Random image from heroimage_00.png to heroimage_21.png (22 images total)
-        const randomIndex = Math.floor(Math.random() * 22);
+        // Random image from heroimage_00.png to heroimage_29.png (30 images total)
+        const randomIndex = Math.floor(Math.random() * 30);
         setHeroImage(`/images/hero/heroimage_${randomIndex.toString().padStart(2, '0')}.png`);
         setIsClient(true);
     }, []);
