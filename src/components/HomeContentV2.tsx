@@ -125,7 +125,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                 </div>
 
                 <p className="text-stone-500 font-serif text-sm md:text-base max-w-xl mx-auto leading-loose mb-8">
-                    X（旧Twitter）で生まれた数々の替え歌を収集しています。<br />
+                    X（旧Twitter）で生まれた替え歌の歌集です。<br />
                     {songs.length}曲の替え歌を収録しています。
                 </p>
 
