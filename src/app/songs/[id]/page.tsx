@@ -6,9 +6,9 @@ import LayoutV2 from '@/components/LayoutV2';
 import SongDetailV2 from '@/components/SongDetailV2';
 
 interface SongPageProps {
-    params: {
+    params: Promise<{
         id: string;
-    };
+    }>;
 }
 
 export async function generateStaticParams() {
@@ -19,7 +19,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: SongPageProps) {
-    const song = await getSongById(params.id);
+    const { id } = await params;
+    const song = await getSongById(id);
 
     if (!song) {
         return {
@@ -38,13 +39,14 @@ export async function generateMetadata({ params }: SongPageProps) {
 }
 
 export default async function SongPage({ params }: SongPageProps) {
-    const song = await getSongById(params.id);
+    const { id } = await params;
+    const song = await getSongById(id);
 
     if (!song) {
         notFound();
     }
 
-    const navigation = await getSongNavigation(params.id);
+    const navigation = await getSongNavigation(id);
     const relatedSongs = await getRelatedSongs(song.references || []);
 
     // Fetch all songs to calculate last update and count for the header
