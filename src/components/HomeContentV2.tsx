@@ -12,7 +12,7 @@ interface HomeContentV2Props {
 }
 
 export default function HomeContentV2({ songs }: HomeContentV2Props) {
-    const [heroImage, setHeroImage] = useState('/images/hero/heroimage_00.png');
+    const [heroImage, setHeroImage] = useState('');
     const [imageLoaded, setImageLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -112,14 +112,16 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                 </h2>
 
                 <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
-                    <Image
-                        src={getAssetPath(heroImage)}
-                        alt="RotomSongs Hero"
-                        fill
-                        className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        priority
-                        onLoad={() => setImageLoaded(true)}
-                    />
+                    {heroImage && (
+                        <Image
+                            src={getAssetPath(heroImage)}
+                            alt="RotomSongs Hero"
+                            fill
+                            className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            priority
+                            onLoad={() => setImageLoaded(true)}
+                        />
+                    )}
                 </div>
 
                 <p className="text-stone-500 font-serif text-sm md:text-base max-w-xl mx-auto leading-loose mb-8">
