@@ -65,12 +65,8 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1
     }
   },
-  manifest: `${baseUrl}/manifest.json`,
-  icons: {
-    icon: getAssetPath('/favicon.ico'),
-    shortcut: getAssetPath('/images/social/favicon-16x16.png'),
-    apple: getAssetPath('/images/social/apple-touch-icon.png')
-  }
+  manifest: `${baseUrl}/manifest.json`
+  // Note: Favicon files are not configured to avoid 404 errors
 };
 
 /**
