@@ -268,32 +268,10 @@ try {
   );
   fs.writeFileSync(metadataPath, metadata);
   console.log(`📝 Updated metadata with ${totalSongs} songs`);
-  
-  const headerPath = path.join(__dirname, '../src/components/Header.tsx');
-  let header = fs.readFileSync(headerPath, 'utf8');
-  header = header.replace(
-    /<span>\d+曲収録<\/span>/g,
-    `<span>${totalSongs}曲収録</span>`
-  );
-  header = header.replace(
-    /<span>\d+曲<\/span>/g,
-    `<span>${totalSongs}曲</span>`
-  );
-  fs.writeFileSync(headerPath, header);
-  console.log(`📝 Updated header with ${totalSongs} songs`);
-  
-  const footerPath = path.join(__dirname, '../src/components/Footer.tsx');
-  let footer = fs.readFileSync(footerPath, 'utf8');
-  footer = footer.replace(
-    /\d+曲の替え歌を収録しています。/g,
-    `${totalSongs}曲の替え歌を収録しています。`
-  );
-  footer = footer.replace(
-    /<span className="font-medium">\d+曲<\/span>/g,
-    `<span className="font-medium">${totalSongs}曲</span>`
-  );
-  fs.writeFileSync(footerPath, footer);
-  console.log(`📝 Updated footer with ${totalSongs} songs`);
+
+  // v2 components (HeaderV2, FooterV2) receive songCount as props,
+  // so no need to update hardcoded values
+  console.log(`✅ Skipped header/footer update (v2 components use props)`);
 
   // 7. Next.jsビルドテスト
   console.log('🔨 Testing build...');
