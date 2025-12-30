@@ -13,7 +13,7 @@ const nextConfig = {
   // GitHub Pages用の設定
   // experimental.esmExternals removed due to Next.js 15.4 compatibility issues
   // 静的パスの生成
-  generateBuildId: () => 'build',
+
 
   // Content Security Policy (CSP) 設定
   // GitHub Pages (output: 'export') ではheadersは使用できないため、開発環境のみ適用
