@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
+import { getAssetPath } from './assetPath';
 
-const baseUrl = process.env.NODE_ENV === 'production' 
+const baseUrl = process.env.NODE_ENV === 'production'
   ? 'https://jr6v5m2k.github.io/RotomSongs'
   : 'http://localhost:3000';
 
@@ -66,9 +67,9 @@ export const defaultMetadata: Metadata = {
   },
   manifest: `${baseUrl}/manifest.json`,
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/images/social/favicon-16x16.png',
-    apple: '/images/social/apple-touch-icon.png'
+    icon: getAssetPath('/favicon.ico'),
+    shortcut: getAssetPath('/images/social/favicon-16x16.png'),
+    apple: getAssetPath('/images/social/apple-touch-icon.png')
   }
 };
 
