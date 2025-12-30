@@ -104,14 +104,14 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
     };
 
     return (
-        <div className="container-responsive py-12 md:py-16">
+        <div className="container-responsive py-8 md:py-16">
             {/* Intro / Hero Area */}
-            <div className="text-center mb-20">
-                <h2 className="text-4xl md:text-5xl font-waterfall text-stone-600 mb-10 leading-tight">
+            <div className="text-center mb-12 md:mb-20">
+                <h2 className="text-4xl md:text-5xl font-waterfall text-stone-600 mb-6 md:mb-10 leading-tight">
                     Heartfelt Parody Songs for <span className='text-orange-600'>Obata</span>
                 </h2>
 
-                <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
+                <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-6 md:mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
                     {heroImage && (
                         <Image
                             src={getAssetPath(heroImage)}
@@ -130,7 +130,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                 </p>
 
                 {/* X Link Button */}
-                <div className="mb-10">
+                <div className="mb-6 md:mb-10">
                     <a
                         href="https://x.com/Starlystrongest"
                         target="_blank"
@@ -162,8 +162,8 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
             </div>
 
             {/* Main Content Area: Latest Songs OR Search Results */}
-            <div className="mb-32">
-                <div className="flex items-center justify-center mb-12">
+            <div className="mb-12 md:mb-32">
+                <div className="flex items-center justify-center mb-6 md:mb-12">
                     <h3 className="text-2xl md:text-3xl font-serif text-stone-800 relative inline-block">
                         <span className="relative z-10">{searchQuery ? '検索結果' : '最新の替え歌'}</span>
                         <span className="absolute bottom-1 left-0 w-full h-3 bg-orange-100/50 -z-0 rotate-1 rounded-sm"></span>
@@ -198,8 +198,8 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
 
             {/* Yearly Archive Section (Only if not searching) */}
             {!searchQuery && isClient && (
-                <div className="pb-20 px-4 md:px-0">
-                    <div className="flex items-center justify-center mb-12">
+                <div className="pb-8 md:pb-20 px-4 md:px-0">
+                    <div className="flex items-center justify-center mb-6 md:mb-12">
                         <h3 className="text-2xl md:text-3xl font-serif text-stone-800 relative inline-block">
                             <span className="relative z-10">年度別替え歌</span>
                             <span className="absolute bottom-1 left-0 w-full h-3 bg-orange-100/50 -z-0 -rotate-1 rounded-sm"></span>
