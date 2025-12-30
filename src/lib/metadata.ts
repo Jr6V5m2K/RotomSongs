@@ -65,8 +65,10 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1
     }
   },
-  manifest: `${baseUrl}/manifest.json`
-  // Note: Favicon files are not configured to avoid 404 errors
+  manifest: `${baseUrl}/manifest.json`,
+  icons: {
+    icon: '/favicon.ico'
+  }
 };
 
 /**
