@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { getAssetPath } from '@/lib/assetPath';
 
 
 interface FooterV2Props {
@@ -24,7 +25,7 @@ export default function FooterV2({ songCount }: FooterV2Props) {
                     <div className="flex flex-col items-center md:items-start text-stone-500 font-sans">
                         <div className="relative h-8 w-32 mb-2 opacity-80">
                             <Image
-                                src="/images/kadenlogo.svg"
+                                src={getAssetPath("/images/kadenlogo.svg")}
                                 alt="家電和歌集"
                                 fill
                                 className="object-contain object-center md:object-left"

@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { SongListItem } from '@/types/song';
 import SongCardV2 from './SongCardV2';
 import { ChevronRight, ChevronDown } from 'lucide-react';
+import { getAssetPath } from '@/lib/assetPath';
 
 interface HomeContentV2Props {
     songs: SongListItem[];
@@ -112,7 +113,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
 
                 <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
                     <Image
-                        src={heroImage}
+                        src={getAssetPath(heroImage)}
                         alt="RotomSongs Hero"
                         fill
                         className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}

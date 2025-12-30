@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { getAssetPath } from '@/lib/assetPath';
 
 
 interface HeaderV2Props {
@@ -25,7 +26,7 @@ export default function HeaderV2({ lastUpdate, songCount }: HeaderV2Props) {
           <Link href="/" className="group flex items-center">
             <div className="relative h-8 w-32 md:h-10 md:w-40 transition-opacity duration-300 group-hover:opacity-80">
               <Image
-                src="/images/kadenlogo.svg"
+                src={getAssetPath("/images/kadenlogo.svg")}
                 alt="家電和歌集"
                 fill
                 className="object-contain object-left"
