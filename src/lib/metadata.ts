@@ -65,10 +65,8 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1
     }
   },
-  manifest: `${baseUrl}/manifest.json`,
-  icons: {
-    icon: `${baseUrl}/favicon.ico`
-  }
+  manifest: `${baseUrl}/manifest.json`
+  // favicon.ico is automatically handled by Next.js from src/app/favicon.ico
 };
 
 /**
