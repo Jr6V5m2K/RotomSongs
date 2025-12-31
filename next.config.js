@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Turbopackのルートディレクトリを明示的に設定
+  turbopack: {
+    root: __dirname,
+  },
   // 開発環境ではSSRを有効にし、本番環境でのみ静的エクスポート
   output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
   trailingSlash: true,
