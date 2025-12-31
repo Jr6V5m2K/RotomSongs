@@ -12,7 +12,8 @@ interface HomeContentV2Props {
 }
 
 export default function HomeContentV2({ songs }: HomeContentV2Props) {
-    const [heroImageIndex, setHeroImageIndex] = useState(0);
+    // Hero image state - null until client-side random selection
+    const [heroImageIndex, setHeroImageIndex] = useState<number | null>(null);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -22,14 +23,9 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
     // Yearly Archive State
     const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
 
+    // Set random hero image on client side only
     useEffect(() => {
-        // Randomize hero image after hydration completes
-        const timer = setTimeout(() => {
-            const randomIndex = Math.floor(Math.random() * 30);
-            setHeroImageIndex(randomIndex);
-        }, 100);
-
-        return () => clearTimeout(timer);
+        setHeroImageIndex(Math.floor(Math.random() * 30));
     }, []);
 
     // Reset pagination when search changes
@@ -114,14 +110,16 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                 </h2>
 
                 <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-6 md:mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
-                    <Image
-                        src={getAssetPath(`/images/hero/heroimage_${heroImageIndex.toString().padStart(2, '0')}.png`)}
-                        alt="RotomSongs Hero"
-                        fill
-                        className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        priority
-                        onLoad={() => setImageLoaded(true)}
-                    />
+                    {heroImageIndex !== null && (
+                        <Image
+                            src={getAssetPath(`/images/hero/heroimage_${heroImageIndex.toString().padStart(2, '0')}.png`)}
+                            alt="RotomSongs Hero"
+                            fill
+                            className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                            priority
+                            onLoad={() => setImageLoaded(true)}
+                        />
+                    )}
                 </div>
 
                 <p className="text-stone-500 font-serif text-sm md:text-base max-w-xl mx-auto leading-loose mb-8">

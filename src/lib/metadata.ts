@@ -67,7 +67,7 @@ export const defaultMetadata: Metadata = {
   },
   manifest: `${baseUrl}/manifest.json`,
   icons: {
-    icon: getAssetPath('/favicon.ico')
+    icon: `${baseUrl}/favicon.ico`
   }
 };
 
