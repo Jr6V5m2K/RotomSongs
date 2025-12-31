@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import { getAssetPath } from '@/lib/assetPath';
 
 
@@ -12,12 +11,6 @@ interface HeaderV2Props {
 }
 
 export default function HeaderV2({ lastUpdate, songCount }: HeaderV2Props) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-stone-50/80 backdrop-blur-md border-b border-stone-200">
       <div className="container-responsive">
@@ -38,7 +31,7 @@ export default function HeaderV2({ lastUpdate, songCount }: HeaderV2Props) {
           {/* Navigation */}
           <nav className="flex items-center space-x-6 md:space-x-8">
             {/* Song Count & Last Update (Hidden on mobile) */}
-            {isClient && (songCount !== undefined || lastUpdate) && (
+            {(songCount !== undefined || lastUpdate) && (
               <div className="hidden md:flex flex-col items-end gap-0.5 text-sm text-stone-500 font-serif">
                 {songCount !== undefined && (
                   <div className="tracking-wider">

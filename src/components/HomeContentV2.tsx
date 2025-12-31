@@ -12,7 +12,7 @@ interface HomeContentV2Props {
 }
 
 export default function HomeContentV2({ songs }: HomeContentV2Props) {
-    const [heroImage, setHeroImage] = useState('');
+    const [heroImageIndex, setHeroImageIndex] = useState(0);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -21,13 +21,15 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
 
     // Yearly Archive State
     const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
-    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // Random image from heroimage_00.png to heroimage_29.png (30 images total)
-        const randomIndex = Math.floor(Math.random() * 30);
-        setHeroImage(`/images/hero/heroimage_${randomIndex.toString().padStart(2, '0')}.png`);
-        setIsClient(true);
+        // Randomize hero image after hydration completes
+        const timer = setTimeout(() => {
+            const randomIndex = Math.floor(Math.random() * 30);
+            setHeroImageIndex(randomIndex);
+        }, 100);
+
+        return () => clearTimeout(timer);
     }, []);
 
     // Reset pagination when search changes
@@ -112,16 +114,14 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                 </h2>
 
                 <div className="relative w-64 h-64 md:w-96 md:h-96 mx-auto mb-6 md:mb-10 rounded-full overflow-hidden shadow-md md:shadow-lg border-3 border-white/50 bg-white">
-                    {heroImage && (
-                        <Image
-                            src={getAssetPath(heroImage)}
-                            alt="RotomSongs Hero"
-                            fill
-                            className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                            priority
-                            onLoad={() => setImageLoaded(true)}
-                        />
-                    )}
+                    <Image
+                        src={getAssetPath(`/images/hero/heroimage_${heroImageIndex.toString().padStart(2, '0')}.png`)}
+                        alt="RotomSongs Hero"
+                        fill
+                        className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        priority
+                        onLoad={() => setImageLoaded(true)}
+                    />
                 </div>
 
                 <p className="text-stone-500 font-serif text-sm md:text-base max-w-xl mx-auto leading-loose mb-8">
@@ -174,7 +174,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                     {/* If searching, show all filtered. If not, show paginated displaySongs */}
                     {(searchQuery ? filteredSongs : displaySongs).length > 0 ? (
                         (searchQuery ? filteredSongs : displaySongs).map((song) => (
-                            <SongCardV2 key={song.id} song={song} isClient={isClient} />
+                            <SongCardV2 key={song.id} song={song} />
                         ))
                     ) : (
                         <div className="col-span-full text-center py-20 text-stone-400 font-serif">
@@ -197,7 +197,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
             </div>
 
             {/* Yearly Archive Section (Only if not searching) */}
-            {!searchQuery && isClient && (
+            {!searchQuery && (
                 <div className="pb-8 md:pb-20 px-4 md:px-0">
                     <div className="flex items-center justify-center mb-6 md:mb-12">
                         <h3 className="text-2xl md:text-3xl font-serif text-stone-800 relative inline-block">
@@ -232,7 +232,7 @@ export default function HomeContentV2({ songs }: HomeContentV2Props) {
                                             <div className="px-6 pb-8 pt-2">
                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                     {yearSongs.map(song => (
-                                                        <SongCardV2 key={song.id} song={song} hideLyrics={true} isClient={isClient} />
+                                                        <SongCardV2 key={song.id} song={song} hideLyrics={true} />
                                                     ))}
                                                 </div>
                                             </div>

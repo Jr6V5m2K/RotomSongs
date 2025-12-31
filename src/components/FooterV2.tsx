@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 import { getAssetPath } from '@/lib/assetPath';
 
 
@@ -10,12 +9,6 @@ interface FooterV2Props {
 }
 
 export default function FooterV2({ songCount }: FooterV2Props) {
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
     return (
         <footer className="bg-white/40 backdrop-blur-md border-t border-stone-200 mt-20">
             <div className="container-responsive py-12">
@@ -32,7 +25,7 @@ export default function FooterV2({ songCount }: FooterV2Props) {
                             />
                         </div>
                         <p className="text-stone-400 text-xs md:text-sm font-serif pl-1">
-                            {isClient ? `${songCount || 0} songs for Obata...` : '0 songs for Obata...'}
+                            {songCount || 0} songs for Obata...
                         </p>
                     </div>
 
@@ -55,7 +48,9 @@ export default function FooterV2({ songCount }: FooterV2Props) {
                 </div>
 
                 <div className="border-t border-stone-200 mt-8 pt-8 text-center text-stone-400 text-xs font-sans tracking-wider">
-                    &copy; {isClient ? new Date().getFullYear() : 2025} Rotom Songs. All Rights Reserved.
+                    <span suppressHydrationWarning>
+                        &copy; {new Date().getFullYear()} Rotom Songs. All Rights Reserved.
+                    </span>
                 </div>
             </div>
         </footer>
