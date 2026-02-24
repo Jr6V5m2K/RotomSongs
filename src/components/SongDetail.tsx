@@ -140,65 +140,23 @@ export default function SongDetail({ song, navigation, relatedSongs }: SongDetai
 
         {/* コンテンツ */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* 替え歌歌詞 */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                </svg>
-                替え歌歌詞
-              </h2>
-              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                <div 
-                  className="lyrics text-gray-800 whitespace-pre-wrap japanese-text"
-                  dangerouslySetInnerHTML={{ 
-                    __html: sanitizeLyrics(song.lyrics) 
-                  }}
-                />
-              </div>
-            </section>
-
-            {/* 原曲情報 */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                原曲情報
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <div className="space-y-3">
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">アーティスト</dt>
-                      <dd className="text-lg text-gray-900 japanese-text">{song.original.artist}</dd>
-                    </div>
-                    
-                    <div>
-                      <dt className="text-sm font-medium text-gray-500">楽曲タイトル</dt>
-                      <dd className="text-lg text-gray-900 japanese-text">{song.original.title}</dd>
-                    </div>
-                  </div>
-                </div>
-
-                {song.original.lyrics && (
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">原曲歌詞（抜粋）</h3>
-                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                      <div 
-                        className="lyrics text-gray-700 whitespace-pre-wrap japanese-text"
-                        dangerouslySetInnerHTML={{ 
-                          __html: sanitizeLyrics(song.original.lyrics) 
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-          </div>
+          {/* 替え歌歌詞 */}
+          <section>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+              替え歌歌詞
+            </h2>
+            <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+              <div
+                className="lyrics text-gray-800 whitespace-pre-wrap japanese-text"
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeLyrics(song.lyrics)
+                }}
+              />
+            </div>
+          </section>
         </div>
       </article>
 
